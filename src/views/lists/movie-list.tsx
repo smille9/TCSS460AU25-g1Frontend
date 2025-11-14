@@ -17,7 +17,6 @@ import { MovieListItem } from 'components/MovieListItem';
 import { NoShow } from 'components/TVListItem';
 
 export default function MessagesList() {
-  // maybe i can make the list a toggle for movies and tv?
   const [shows, setMovies] = React.useState<IMovie[]>([]);
 
   React.useEffect(() => {
