@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { IShow } from 'types/tv';
 
 // next
 import { getSession } from 'next-auth/react';
@@ -96,10 +97,115 @@ messagesService.interceptors.response.use(
   }
 );
 
+// ==============================|| MOCK MOVIE SERVICE ||============================== //
+
+const mockMovieService = {
+  get: () => {
+    return {
+      success: true,
+      message: 'string',
+      data: {
+        data: [
+          {
+            movie_id: 0,
+            title: 'string',
+            release_year: 0,
+            runtime_minutes: 0,
+            rating: 'string',
+            box_office: 'string',
+            director_id: 0,
+            country_id: 0
+          },
+          {
+            movie_id: 0,
+            title: 'string',
+            release_year: 0,
+            runtime_minutes: 0,
+            rating: 'string',
+            box_office: 'string',
+            director_id: 0,
+            country_id: 0
+          }
+        ]
+      },
+      pagination: {
+        limit: 0,
+        offset: 0,
+        totalCount: 2,
+        hasNext: true,
+        hasPrevious: true
+      }
+    };
+  }
+};
+
+// ==============================|| MOCK TV SERVICE ||============================== //
+
+const mockTVService = {
+  get: (): IShow[] => {
+    return [
+      {
+        iD: 0,
+        name: 'string',
+        originalName: 'string',
+        firstAirDate: '2025-11-14',
+        lastAirDate: '2025-11-14',
+        seasons: 0,
+        episodes: 0,
+        status: 'Returning Series',
+        genres: ['string'],
+        overview: 'string',
+        popularity: 0,
+        tMDbRating: 0,
+        voteCount: 0,
+        posterURL: 'string',
+        backdropURL: 'string',
+        creators: ['string'],
+        networks: ['string'],
+        studios: ['string'],
+        cast: [
+          {
+            name: 'string',
+            character: 'string',
+            profileUrl: 'string'
+          }
+        ]
+      },
+      {
+        iD: 1,
+        name: 'string',
+        originalName: 'string',
+        firstAirDate: '2025-11-14',
+        lastAirDate: '2025-11-14',
+        seasons: 0,
+        episodes: 0,
+        status: 'Returning Series',
+        genres: ['string'],
+        overview: 'string',
+        popularity: 0,
+        tMDbRating: 0,
+        voteCount: 0,
+        posterURL: 'string',
+        backdropURL: 'string',
+        creators: ['string'],
+        networks: ['string'],
+        studios: ['string'],
+        cast: [
+          {
+            name: 'string',
+            character: 'string',
+            profileUrl: 'string'
+          }
+        ]
+      }
+    ];
+  }
+};
+
 // ==============================|| EXPORTS ||============================== //
 
 export default credentialsService; // Maintain backward compatibility
-export { credentialsService, messagesService };
+export { credentialsService, messagesService, mockMovieService, mockTVService };
 
 // Credentials service helpers
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
