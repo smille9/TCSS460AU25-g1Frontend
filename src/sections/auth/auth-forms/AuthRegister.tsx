@@ -63,6 +63,7 @@ export default function AuthRegister({ providers, csrfToken }: any) {
       initialValues={{
         firstname: '',
         lastname: '',
+        username: '',
         email: '',
         password: '',
         submit: null
@@ -70,11 +71,24 @@ export default function AuthRegister({ providers, csrfToken }: any) {
       validationSchema={Yup.object().shape({
         firstname: Yup.string().max(255).required('First Name is required'),
         lastname: Yup.string().max(255).required('Last Name is required'),
+        username: Yup.string()
+          .min(3)
+          .max(50)
+          .matches(/^[a-zA-Z0-9_-]+$/, 'Username can only contain letters, numbers, underscores or hyphens')
+          .required('Username is required'),
         email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
         password: Yup.string()
           .required('Password is required')
           .test('no-leading-trailing-whitespace', 'Password cannot start or end with spaces', (value) => value === value.trim())
-          .max(10, 'Password must be less than 10 characters')
+          .min(8, 'Password must be at least 8 characters in length')
+          .max(128, 'Password must be less than 128 characters'),
+        phone: Yup.string()
+          .min(10)
+          .test('is-valid-phone', 'Phone number must contain at least 10 digits', (value) => {
+            if (!value) return false;
+            const digitsOnly = value.replace(/\D/g, '');
+            return digitsOnly.length >= 10;
+          })
       })}
       onSubmit={async (values, { setErrors, setSubmitting }) => {
         const trimmedEmail = values.email.trim();

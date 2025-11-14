@@ -5,18 +5,18 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 // project import
 import { authApi } from 'services/authApi';
 
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// function getRandomInt(min: number, max: number) {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
 
-function getRandomPhoneNumber() {
-  const areaCode = getRandomInt(100, 999);
-  const centralOfficeCode = getRandomInt(100, 999);
-  const lineNumber = getRandomInt(1000, 9999);
-  return `${areaCode}-${centralOfficeCode}-${lineNumber}`;
-}
+// function getRandomPhoneNumber() {
+//   const areaCode = getRandomInt(100, 999);
+//   const centralOfficeCode = getRandomInt(100, 999);
+//   const lineNumber = getRandomInt(1000, 9999);
+//   return `${areaCode}-${centralOfficeCode}-${lineNumber}`;
+// }
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -56,18 +56,22 @@ export const authOptions: NextAuthOptions = {
         firstname: { name: 'firstname', label: 'First Name', type: 'text', placeholder: 'Enter First Name' },
         lastname: { name: 'lastname', label: 'Last Name', type: 'text', placeholder: 'Enter Last Name' },
         email: { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter Email' },
-        company: { name: 'company', label: 'Company', type: 'text', placeholder: 'Enter Company' },
-        password: { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter Password' }
+        //company: { name: 'company', label: 'Company', type: 'text', placeholder: 'Enter Company' },
+        username: { name: 'username', label: 'Username', type: 'text', placeholder: 'Enter a Username' },
+        password: { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter Password' },
+        phone: { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'Enter Phone #' }
       },
       async authorize(credentials) {
         try {
           const response = await authApi.register({
             firstname: credentials?.firstname!,
             lastname: credentials?.lastname!,
+            username: credentials?.username!,
             password: credentials?.password!,
             email: credentials?.email!,
-            username: credentials?.email!,
-            phone: getRandomPhoneNumber() // TODO request phone number from user
+            //username: credentials?.email!, // Preston note - API docs state it must be alphanumeric + underscore/hyphen, so this won't work
+            //phone: getRandomPhoneNumber() // TODO request phone number from user
+            phone: credentials?.phone!
           });
           if (response) {
             // TODO form your user object based on the Credentials API you're using.
