@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { IShow } from 'types/tv';
+import { IMovies } from 'types/movies'
 
 // next
 import { getSession } from 'next-auth/react';
@@ -100,7 +101,7 @@ messagesService.interceptors.response.use(
 // ==============================|| MOCK MOVIE SERVICE ||============================== //
 
 const mockMovieService = {
-  get: () => {
+  get: (): IMovies => {
     return {
       success: true,
       message: 'string',
