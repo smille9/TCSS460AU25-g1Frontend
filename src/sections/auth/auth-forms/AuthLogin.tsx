@@ -69,7 +69,8 @@ export default function AuthLogin({ providers, csrfToken }: any) {
           password: Yup.string()
             .required('Password is required')
             .test('no-leading-trailing-whitespace', 'Password cannot start or end with spaces', (value) => value === value.trim())
-            .min(6, 'Password must be at least 6 characters')
+            .min(8, 'Password must be at least 6 characters')
+            .max(128, 'Password must be less than 128 characters')
         })}
         onSubmit={(values, { setErrors, setSubmitting }) => {
           const trimmedEmail = values.email.trim();
