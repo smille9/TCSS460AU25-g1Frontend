@@ -7,21 +7,21 @@ export interface IShow {
   seasons: number;
   episodes: number;
   status: string;
-  genres: [string];
+  genres: string[];
   overview: string;
   popularity: number;
   tMDbRating: number;
   voteCount: number;
   posterURL: string;
   backdropURL: string;
-  creators: [string];
-  networks: [string];
-  studios: [string];
-  cast: [
-    {
-      name: string;
-      character: string;
-      profileUrl: string;
-    }
-  ];
+  creators: string[];
+  networks: string[];
+  studios: string[];
+  cast: ActorObj[];
+}
+
+export interface ActorObj {
+  name: string;
+  character: string;
+  profileUrl: string;
 }

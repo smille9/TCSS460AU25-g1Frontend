@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
-import { ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
 
 // project import
 import { IShow } from 'types/tv';
@@ -28,7 +28,9 @@ export function TVListItem({ show }: { show: IShow }) {
   return (
     <ListItem disablePadding>
       <ListItemButton onClick={() => onItemClick(show)}>
-        <ListItemAvatar>{show.posterURL}</ListItemAvatar>
+        <ListItemAvatar>
+          <Avatar alt="Poster" src={show.posterURL} />
+        </ListItemAvatar>
         <ListItemText
           primary={show.name}
           secondary={show.tMDbRating}

@@ -4,7 +4,7 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import EmailIcon from '@mui/icons-material/Email';
+import MovieIcon from '@mui/icons-material/Movie';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -60,7 +60,7 @@ export default function MessagesList() {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <EmailIcon />
+          <MovieIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Movies

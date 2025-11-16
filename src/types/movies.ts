@@ -9,7 +9,7 @@ export interface IMovie {
   country_id: number;
 }
 export interface IMovies {
-  success: true;
+  success: boolean;
   message: string;
   data: {
     data: IMovie[];
@@ -18,7 +18,7 @@ export interface IMovies {
     limit: number;
     offset: number;
     totalCount: number;
-    hasNext: true;
-    hasPrevious: true;
+    hasNext: boolean;
+    hasPrevious: boolean;
   };
 }
