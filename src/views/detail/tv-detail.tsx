@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-
+import { useParams } from 'next/navigation';
 import { Box, Stack, Typography, Chip, Card, CardMedia, Rating, Avatar } from "@mui/material";
 
 // project import
@@ -12,21 +12,25 @@ import { IShow, ActorObj } from 'types/tv';
 export default function TvDetail() {
     const [show, setShow] = React.useState<IShow>();
 
+    //Capture Route params
+    const {id}  = useParams();
     React.useEffect(() => {
+
+        if (!id) return;
         //This would be data from our service apis (found in ../services) for now we can mock
         tvApi
-            .getById(0)
+            .getById(Number(id)) //0 for quality, 1 for bad with mocks.
             .then((response) => {
                 setShow(response);
                 console.dir(response);
             })
             .catch((error) => console.error(error));
-    }, []);
+    }, [id]);
 
 
     //If show is undefined
     if (!show) {
-        return <div>Loading...</div>;
+        return <div>Show was not found with id: {id ?? 'undefined'}</div>;
     }
 
     return (
