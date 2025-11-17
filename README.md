@@ -14,6 +14,7 @@
 ---
 ## Contents
 * [Alpha Sprint 1](#alpha-sprint-1-week-6---november-3---november-9)
+* [Beta Sprint 1](#beta-sprint-1-week-7---november-10---november-16)
 
 ---
 
@@ -59,3 +60,37 @@ Turn draft ideas into Figma designs.
 * We're unsure if we need the ability to edit or add shows in a front end interface since it will probably be just us doing that (I'm guessing we do, but we focused on designs for other aspects of the site for now)
 * Question: Do we need all aspects of the site protected by login? This may affect the flow of our site.
 * The APIs we were given are lacking some basic functionality. We are in talks with these groups to work out a solution.
+
+---
+
+# Beta Sprint 1 (Week 7 - November 10 - November 16)
+https://couchmouse.vercel.app
+
+This week: integrate Credentials API, create movie/tv detail and list pages using mock data. Transfer tv show database to Supabase.
+
+## Contributions
+Group contributions:
+
+Mathew, Preston, and Sean collaborated together during our weekly meetings to become familiar with the template.
+
+Additional individual contributions:
+* Mathew: Created mock data and list pages
+* Preston: integrated credentials api and updated login forms
+* Sean: Created detail pages
+* Abdul: No contribution.
+
+## Meetings
+2025-11-10 (~1 hour)
+
+Weekly scrum, reviewed assignments and requirements.
+
+2025-11-13 (~2 hours)
+
+Template and credentials API integration analysis, discuss mock data, discuss plans for each deliverable page.
+
+2025-11-14 (~2 hours)
+
+Finalize work still needed and discuss solutions to roadblocks encountered. Switched tv show database to Supabase to extend its life.
+
+## Sprint Comments and Concerns
+Starting to run a little behind and the kanban backlog is growing faster than development is going. We aren't hearing back from other groups about questions we have or functionality requests.
