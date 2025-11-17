@@ -10,24 +10,24 @@ import { getSession } from 'next-auth/react';
 if (!process.env.CREDENTIALS_API_URL) {
   throw new Error(
     'CREDENTIALS_API_URL environment variable is not set. ' +
-      'Please add CREDENTIALS_API_URL to your .env and/or next.config.js file(s). ' +
-      'Example: CREDENTIALS_API_URL=http://localhost:8008'
+    'Please add CREDENTIALS_API_URL to your .env and/or next.config.js file(s). ' +
+    'Example: CREDENTIALS_API_URL=http://localhost:8008'
   );
 }
 
 if (!process.env.MESSAGES_WEB_API_URL) {
   throw new Error(
     'MESSAGES_WEB_API_URL environment variable is not set. ' +
-      'Please add MESSAGES_WEB_API_URL to your .env and/or next.config.js file(s). ' +
-      'Example: MESSAGES_WEB_API_URL=http://localhost:8000'
+    'Please add MESSAGES_WEB_API_URL to your .env and/or next.config.js file(s). ' +
+    'Example: MESSAGES_WEB_API_URL=http://localhost:8000'
   );
 }
 
 if (!process.env.MESSAGES_WEB_API_KEY) {
   throw new Error(
     'MESSAGE_WEB_API_KEY environment variable is not set. ' +
-      'Please add MESSAGE_WEB_API_KEY to your .env and/or next.config.js file(s). ' +
-      'Example: MESSAGE_WEB_API_KEY=your-api-key-here'
+    'Please add MESSAGE_WEB_API_KEY to your .env and/or next.config.js file(s). ' +
+    'Example: MESSAGE_WEB_API_KEY=your-api-key-here'
   );
 }
 
@@ -205,6 +205,87 @@ const mockTVService = {
         ]
       }
     ];
+  },
+
+  //Uses same shows from above, only valid IDs are 0 and 1 right now.
+  getById: (id: number): IShow | undefined => {
+    switch (id) {
+      case 0:
+        return {
+          iD: 0,
+          name: 'Quality Show',
+          originalName: 'Good Show',
+          firstAirDate: '2020-11-14',
+          lastAirDate: '2025-11-14',
+          seasons: 5,
+          episodes: 25,
+          status: 'Returning Series',
+          genres: ['Drama'],
+          overview: 'A pretty good show',
+          popularity: 98,
+          tMDbRating: 8.6,
+          voteCount: 45,
+          posterURL: 'https://image.tmdb.org/t/p/w500/wtQIgqEQEIQnNqLVGTShUf7qLap.jpg',
+          backdropURL: 'https://image.tmdb.org/t/p/w500/iKfYhpMqcpJgXqciWZOIZRRJDF6.jpg',
+          creators: ['Me', 'You'],
+          networks: ['NBC'],
+          studios: ['Bones'],
+          cast: [
+            {
+              name: 'Ana Garibaldi',
+              character: 'Gladys Guerra',
+              profileUrl: 'https://image.tmdb.org/t/p/w500/mTiTouoWJPqgdFWmdbzljUniDHH.jpg'
+            }
+          ]
+        };
+
+      case 1:
+        return {
+          iD: 1,
+          name: 'Bad Show',
+          originalName: 'Stinker',
+          firstAirDate: '2024-11-14',
+          lastAirDate: '2025-11-14',
+          seasons: 1,
+          episodes: 8,
+          status: 'Returning Series',
+          genres: ['Horror', 'Romance'],
+          overview: 'a real stinker of a show',
+          popularity: 10,
+          tMDbRating: 3,
+          voteCount: 4,
+          posterURL: 'https://image.tmdb.org/t/p/w500/abeH7n5pcuQcwYcTxG6DTZvXLP1.jpg',
+          backdropURL: 'https://image.tmdb.org/t/p/w500/tQqbbxBAdW2ql8vbOqMOJbtSQ7O.jpg',
+          creators: ['string'],
+          networks: ['string'],
+          studios: ['string'],
+          cast: [
+            {
+              name: 'Actor',
+              character: 'Character',
+              profileUrl: 'string'
+            },
+            {
+              name: 'Actor2',
+              character: 'Character2',
+              profileUrl: 'string'
+            },
+            {
+              name: 'Actor3',
+              character: 'Character3',
+              profileUrl: 'string'
+            },
+            {
+              name: 'Actor4',
+              character: 'Character4',
+              profileUrl: 'string'
+            }
+          ]
+        };
+
+      default:
+        return undefined;
+    }
   }
 };
 
