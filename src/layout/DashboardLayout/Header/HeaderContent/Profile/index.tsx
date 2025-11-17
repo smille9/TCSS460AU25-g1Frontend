@@ -16,6 +16,11 @@ import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 // project import
 import Avatar from 'components/@extended/Avatar';
@@ -27,6 +32,7 @@ import useUser from 'hooks/useUser';
 
 // assets
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
+import LockOutlined from '@ant-design/icons/LockOutlined';
 
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
@@ -38,6 +44,11 @@ export default function Profile() {
   const handleLogout = () => {
     signOut({ redirect: false });
     router.push('/login');
+  };
+
+  const handleReset = () => {
+    setOpen(false);
+    router.push('/reset-pass');
   };
 
   const anchorRef = useRef<any>(null);
@@ -139,6 +150,15 @@ export default function Profile() {
                       </Grid>
                     </Grid>
                   </CardContent>
+                  <Divider />
+                  <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
+                    <ListItemButton onClick={handleReset}>
+                      <ListItemIcon>
+                        <LockOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary="Reset Password" />
+                    </ListItemButton>
+                  </List>
                 </MainCard>
               </ClickAwayListener>
             </Paper>
