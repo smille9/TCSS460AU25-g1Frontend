@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { IShow } from 'types/tv';
-import { IMovies, IMovie } from 'types/movies'
+import { IMovies, IMovie } from 'types/movies';
 
 // next
 import { getSession } from 'next-auth/react';
@@ -10,24 +10,24 @@ import { getSession } from 'next-auth/react';
 if (!process.env.CREDENTIALS_API_URL) {
   throw new Error(
     'CREDENTIALS_API_URL environment variable is not set. ' +
-    'Please add CREDENTIALS_API_URL to your .env and/or next.config.js file(s). ' +
-    'Example: CREDENTIALS_API_URL=http://localhost:8008'
+      'Please add CREDENTIALS_API_URL to your .env and/or next.config.js file(s). ' +
+      'Example: CREDENTIALS_API_URL=http://localhost:8008'
   );
 }
 
 if (!process.env.MESSAGES_WEB_API_URL) {
   throw new Error(
     'MESSAGES_WEB_API_URL environment variable is not set. ' +
-    'Please add MESSAGES_WEB_API_URL to your .env and/or next.config.js file(s). ' +
-    'Example: MESSAGES_WEB_API_URL=http://localhost:8000'
+      'Please add MESSAGES_WEB_API_URL to your .env and/or next.config.js file(s). ' +
+      'Example: MESSAGES_WEB_API_URL=http://localhost:8000'
   );
 }
 
 if (!process.env.MESSAGES_WEB_API_KEY) {
   throw new Error(
     'MESSAGE_WEB_API_KEY environment variable is not set. ' +
-    'Please add MESSAGE_WEB_API_KEY to your .env and/or next.config.js file(s). ' +
-    'Example: MESSAGE_WEB_API_KEY=your-api-key-here'
+      'Please add MESSAGE_WEB_API_KEY to your .env and/or next.config.js file(s). ' +
+      'Example: MESSAGE_WEB_API_KEY=your-api-key-here'
   );
 }
 
@@ -139,8 +139,8 @@ const mockMovieService = {
     };
   },
 
-  //TODO: MATCH TO API. 
-  //TODO: This currently does not match the API response format for the movie API we were given, as the get movie by id route does not exist. We have messaged them. 
+  //TODO: MATCH TO API.
+  //TODO: This currently does not match the API response format for the movie API we were given, as the get movie by id route does not exist. We have messaged them.
   getByID: (id: number): IMovie | undefined => {
     switch (id) {
       case 0:
@@ -164,7 +164,7 @@ const mockMovieService = {
           box_office: '$123',
           director_id: 0,
           country_id: 0
-        }
+        };
     }
   }
 };

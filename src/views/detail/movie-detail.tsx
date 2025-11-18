@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { Box, Stack, Typography, Card, CardMedia, Rating, Avatar } from '@mui/material';
+import { Box, Stack, Typography, Card, CardMedia, Rating } from '@mui/material';
 
 // project import
 import { moviesApi } from 'services/moviesApi';
