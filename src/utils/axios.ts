@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { IShow } from 'types/tv';
-import { IMovies } from 'types/movies'
+import { IMovies, IMovie } from 'types/movies'
 
 // next
 import { getSession } from 'next-auth/react';
@@ -137,6 +137,35 @@ const mockMovieService = {
         hasPrevious: false
       }
     };
+  },
+
+  //TODO: MATCH TO API. 
+  //TODO: This currently does not match the API response format for the movie API we were given, as the get movie by id route does not exist. We have messaged them. 
+  getByID: (id: number): IMovie | undefined => {
+    switch (id) {
+      case 0:
+        return {
+          movie_id: 0,
+          title: 'Cool Movie',
+          release_year: 1980,
+          runtime_minutes: 101,
+          rating: '8.6',
+          box_office: '$123,456,789',
+          director_id: 0,
+          country_id: 0
+        };
+      case 1:
+        return {
+          movie_id: 1,
+          title: 'Bad Movie',
+          release_year: 2024,
+          runtime_minutes: 126,
+          rating: '4.3',
+          box_office: '$123',
+          director_id: 0,
+          country_id: 0
+        }
+    }
   }
 };
 
@@ -208,7 +237,7 @@ const mockTVService = {
   },
 
   //Uses same shows from above, only valid IDs are 0 and 1 right now.
-  getById: (id: number): IShow | undefined => {
+  getByID: (id: number): IShow | undefined => {
     switch (id) {
       case 0:
         return {

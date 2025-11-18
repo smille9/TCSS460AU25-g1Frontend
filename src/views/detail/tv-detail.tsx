@@ -19,7 +19,7 @@ export default function TvDetail() {
         if (!id) return;
         //This would be data from our service apis (found in ../services) for now we can mock
         tvApi
-            .getById(Number(id)) //0 for quality, 1 for bad with mocks.
+            .getByID(Number(id)) //0 for quality, 1 for bad with mocks.
             .then((response) => {
                 setShow(response);
                 console.dir(response);
