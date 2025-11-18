@@ -1,4 +1,4 @@
-import MovieDetail from "views/detail/movie-detail";
+import MovieDetail from 'views/detail/movie-detail';
 
 
 export default function ShowDetailViewPage() {
