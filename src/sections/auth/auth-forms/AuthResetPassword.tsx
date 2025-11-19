@@ -26,7 +26,6 @@ import IconButton from 'components/@extended/IconButton';
 import AnimateButton from 'components/@extended/AnimateButton';
 
 import { openSnackbar } from 'api/snackbar';
-import useScriptRef from 'hooks/useScriptRef';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // types
@@ -36,17 +35,23 @@ import { StringColorProps } from 'types/password';
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
+import { authApi } from 'services/authApi';
 
 // ============================|| STATIC - RESET PASSWORD ||============================ //
 
 export default function AuthResetPassword() {
-  const scriptedRef = useScriptRef();
   const router = useRouter();
 
   const [level, setLevel] = useState<StringColorProps>();
   const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleClickShowOldPassword = () => {
+    setShowOldPassword(!showOldPassword);
   };
 
   const handleMouseDownPassword = (event: SyntheticEvent) => {
@@ -65,43 +70,47 @@ export default function AuthResetPassword() {
   return (
     <Formik
       initialValues={{
+        old: '',
         password: '',
         confirmPassword: '',
         submit: null
       }}
       validationSchema={Yup.object().shape({
-        password: Yup.string().max(255).required('Password is required'),
+        old: Yup.string().max(255).required('Old Password is required!'),
+        password: Yup.string().max(255)
+          .required('Password is required')
+          .test('old', 'New password cannot be the old password!', (password, yup) => yup.parent.old !== password),
         confirmPassword: Yup.string()
           .required('Confirm Password is required')
           .test('confirmPassword', 'Both Password must be match!', (confirmPassword, yup) => yup.parent.password === confirmPassword)
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
-          // password reset
-          if (scriptedRef.current) {
-            setStatus({ success: true });
-            setSubmitting(false);
+          await authApi.change({
+            oldPassword: values.old,
+            newPassword: values.password
+          });
 
-            openSnackbar({
-              open: true,
-              message: 'Successfuly reset password.',
-              variant: 'alert',
-              alert: {
-                color: 'success'
-              }
-            } as SnackbarProps);
+          setStatus({ success: true });
+          setSubmitting(false);
 
-            setTimeout(() => {
-              router.push('/login');
-            }, 1500);
-          }
+          openSnackbar({
+            open: true,
+            message: 'Successfuly reset password.',
+            variant: 'alert',
+            alert: {
+              color: 'success'
+            }
+          } as SnackbarProps);
+
+          setTimeout(() => {
+            router.push('/login');
+          }, 1500);
         } catch (err: any) {
           console.error(err);
-          if (scriptedRef.current) {
-            setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
-          }
+          setStatus({ success: false });
+          setErrors({ submit: err.message });
+          setSubmitting(false);
         }
       }}
     >
@@ -110,7 +119,41 @@ export default function AuthResetPassword() {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="password-reset">Password</InputLabel>
+                <InputLabel htmlFor="old-password">Old Password</InputLabel>
+                <OutlinedInput
+                  fullWidth
+                  error={Boolean(touched.old && errors.old)}
+                  id="old-password"
+                  type={showOldPassword ? 'text' : 'password'}
+                  value={values.old}
+                  name="old"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle old password visibility"
+                        onClick={handleClickShowOldPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                        color="secondary"
+                      >
+                        {showOldPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  placeholder="Enter old password"
+                />
+              </Stack>
+              {touched.old && errors.old && (
+                <FormHelperText error id="helper-text-old-password">
+                  {errors.old}
+                </FormHelperText>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <Stack spacing={1}>
+                <InputLabel htmlFor="password-reset">New Password</InputLabel>
                 <OutlinedInput
                   fullWidth
                   error={Boolean(touched.password && errors.password)}
@@ -136,7 +179,7 @@ export default function AuthResetPassword() {
                       </IconButton>
                     </InputAdornment>
                   }
-                  placeholder="Enter password"
+                  placeholder="Enter new password"
                 />
               </Stack>
               {touched.password && errors.password && (
