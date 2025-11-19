@@ -6,7 +6,7 @@ export const authApi = {
   register: (data: { email: string; password: string; firstname: string; lastname: string; username: string; phone: string }) =>
     credentialsService.post('/auth/register', data),
 
-  resetreq: (email: string) => credentialsService.post('/auth/password/reset-request', email),
+  resetreq: (data: { email: string }) => credentialsService.post('/auth/password/reset-request', data),
 
   reset: (data: { token: string; password: string }) => credentialsService.post('/auth/password/reset', data),
 

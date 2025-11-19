@@ -24,6 +24,7 @@ import { openSnackbar } from 'api/snackbar';
 
 // types
 import { SnackbarProps } from 'types/snackbar';
+import { authApi } from 'services/authApi';
 
 // ============================|| FIREBASE - FORGOT PASSWORD ||============================ //
 
@@ -44,6 +45,8 @@ export default function AuthForgotPassword() {
         try {
           setStatus({ success: true });
           setSubmitting(false);
+
+          await authApi.resetreq({ email: values.email });
 
           openSnackbar({
             open: true,
