@@ -1,5 +1,6 @@
 // next
-import { Public_Sans } from 'next/font/google';
+//import { Public_Sans } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 
 // types
 import { DefaultConfigProps } from 'types/config';
@@ -15,7 +16,8 @@ export const HORIZONTAL_MAX_ITEM = 7;
 export const DRAWER_WIDTH = 260;
 export const MINI_DRAWER_WIDTH = 60;
 
-export const publicSans = Public_Sans({ subsets: ['latin'], weight: ['400', '500', '300', '700'], display: 'swap' });
+//export const publicSans = Public_Sans({ subsets: ['latin'], weight: ['400', '500', '300', '700'], display: 'swap' });
+export const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '300', '700'] });
 
 export enum SimpleLayoutType {
   SIMPLE = 'simple',
@@ -55,12 +57,12 @@ export enum DropzoneType {
 // ==============================|| THEME CONFIG ||============================== //
 
 const config: DefaultConfigProps = {
-  fontFamily: publicSans.style.fontFamily,
+  fontFamily: roboto.style.fontFamily,
   i18n: 'en',
   menuOrientation: MenuOrientation.VERTICAL,
   miniDrawer: false,
   container: true,
-  mode: ThemeMode.LIGHT,
+  mode: ThemeMode.DARK,
   presetColor: 'default',
   themeDirection: ThemeDirection.LTR
 };
