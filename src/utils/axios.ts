@@ -98,7 +98,36 @@ messagesService.interceptors.response.use(
   }
 );
 
-// ==============================|| MOCK MOVIE SERVICE ||============================== //
+// ==============================|| MOVIE SERVICE ||============================== //
+
+const moviesService = axios.create({ baseURL: process.env.MOVIES_API_URL });
+
+moviesService.interceptors.request.use(
+  async (config) => {
+    config.headers['X-API-Key'] = process.env.MOVIES_API_KEY;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+moviesService.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === 'ECONNREFUSED') {
+      const { baseURL, url, data } = error.config;
+      console.error('Connection refused. The Messages API server may be down. Attempting to connect to: ');
+      console.error({ baseURL, url, data });
+      return Promise.reject({
+        message: 'Connection refused.'
+      });
+    } else if (error.response?.status >= 500) {
+      return Promise.reject({ message: 'Server Error. Contact support' });
+    }
+    return Promise.reject((error.response && error.response.data) || 'Server connection refused');
+  }
+);
 
 const mockMovieService = {
   get: (): IMovies => {
@@ -170,6 +199,35 @@ const mockMovieService = {
 };
 
 // ==============================|| MOCK TV SERVICE ||============================== //
+
+const tvService = axios.create({ baseURL: process.env.TV_API_URL });
+
+tvService.interceptors.request.use(
+  async (config) => {
+    config.headers['X-API-Key'] = process.env.TV_API_KEY;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+tvService.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === 'ECONNREFUSED') {
+      const { baseURL, url, data } = error.config;
+      console.error('Connection refused. The Messages API server may be down. Attempting to connect to: ');
+      console.error({ baseURL, url, data });
+      return Promise.reject({
+        message: 'Connection refused.'
+      });
+    } else if (error.response?.status >= 500) {
+      return Promise.reject({ message: 'Server Error. Contact support' });
+    }
+    return Promise.reject((error.response && error.response.data) || 'Server connection refused');
+  }
+);
 
 const mockTVService = {
   get: (): IShow[] => {
@@ -321,7 +379,7 @@ const mockTVService = {
 // ==============================|| EXPORTS ||============================== //
 
 export default credentialsService; // Maintain backward compatibility
-export { credentialsService, messagesService, mockMovieService, mockTVService };
+export { credentialsService, messagesService, mockMovieService, mockTVService, moviesService, tvService };
 
 // Credentials service helpers
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
