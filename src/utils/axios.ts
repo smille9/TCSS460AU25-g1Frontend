@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { IShow } from 'types/tv';
-import { IMovies } from 'types/movies'
+import { IMovies, IMovie } from 'types/movies';
 
 // next
 import { getSession } from 'next-auth/react';
@@ -137,6 +137,35 @@ const mockMovieService = {
         hasPrevious: false
       }
     };
+  },
+
+  //TODO: MATCH TO API.
+  //TODO: This currently does not match the API response format for the movie API we were given, as the get movie by id route does not exist. We have messaged them.
+  getByID: (id: number): IMovie | undefined => {
+    switch (id) {
+      case 0:
+        return {
+          movie_id: 0,
+          title: 'Cool Movie',
+          release_year: 1980,
+          runtime_minutes: 101,
+          rating: '8.6',
+          box_office: '$123,456,789',
+          director_id: 0,
+          country_id: 0
+        };
+      case 1:
+        return {
+          movie_id: 1,
+          title: 'Bad Movie',
+          release_year: 2024,
+          runtime_minutes: 126,
+          rating: '4.3',
+          box_office: '$123',
+          director_id: 0,
+          country_id: 0
+        };
+    }
   }
 };
 
@@ -205,6 +234,87 @@ const mockTVService = {
         ]
       }
     ];
+  },
+
+  //Uses same shows from above, only valid IDs are 0 and 1 right now.
+  getByID: (id: number): IShow | undefined => {
+    switch (id) {
+      case 0:
+        return {
+          iD: 0,
+          name: 'Quality Show',
+          originalName: 'Good Show',
+          firstAirDate: '2020-11-14',
+          lastAirDate: '2025-11-14',
+          seasons: 5,
+          episodes: 25,
+          status: 'Returning Series',
+          genres: ['Drama'],
+          overview: 'A pretty good show',
+          popularity: 98,
+          tMDbRating: 8.6,
+          voteCount: 45,
+          posterURL: 'https://image.tmdb.org/t/p/w500/wtQIgqEQEIQnNqLVGTShUf7qLap.jpg',
+          backdropURL: 'https://image.tmdb.org/t/p/w500/iKfYhpMqcpJgXqciWZOIZRRJDF6.jpg',
+          creators: ['Me', 'You'],
+          networks: ['NBC'],
+          studios: ['Bones'],
+          cast: [
+            {
+              name: 'Ana Garibaldi',
+              character: 'Gladys Guerra',
+              profileUrl: 'https://image.tmdb.org/t/p/w500/mTiTouoWJPqgdFWmdbzljUniDHH.jpg'
+            }
+          ]
+        };
+
+      case 1:
+        return {
+          iD: 1,
+          name: 'Bad Show',
+          originalName: 'Stinker',
+          firstAirDate: '2024-11-14',
+          lastAirDate: '2025-11-14',
+          seasons: 1,
+          episodes: 8,
+          status: 'Returning Series',
+          genres: ['Horror', 'Romance'],
+          overview: 'a real stinker of a show',
+          popularity: 10,
+          tMDbRating: 3,
+          voteCount: 4,
+          posterURL: 'https://image.tmdb.org/t/p/w500/abeH7n5pcuQcwYcTxG6DTZvXLP1.jpg',
+          backdropURL: 'https://image.tmdb.org/t/p/w500/tQqbbxBAdW2ql8vbOqMOJbtSQ7O.jpg',
+          creators: ['string'],
+          networks: ['string'],
+          studios: ['string'],
+          cast: [
+            {
+              name: 'Actor',
+              character: 'Character',
+              profileUrl: 'string'
+            },
+            {
+              name: 'Actor2',
+              character: 'Character2',
+              profileUrl: 'string'
+            },
+            {
+              name: 'Actor3',
+              character: 'Character3',
+              profileUrl: 'string'
+            },
+            {
+              name: 'Actor4',
+              character: 'Character4',
+              profileUrl: 'string'
+            }
+          ]
+        };
+
+      default:
+        return undefined;
+    }
   }
 };
 
