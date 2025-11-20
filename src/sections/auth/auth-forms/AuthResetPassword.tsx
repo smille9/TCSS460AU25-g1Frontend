@@ -76,8 +76,8 @@ export default function AuthResetPassword() {
         submit: null
       }}
       validationSchema={Yup.object().shape({
-        old: Yup.string().max(255).required('Old Password is required!'),
-        password: Yup.string().max(255)
+        old: Yup.string().required('Old Password is required!'),
+        password: Yup.string().min(8).max(128)
           .required('Password is required')
           .test('old', 'New password cannot be the old password!', (password, yup) => yup.parent.old !== password),
         confirmPassword: Yup.string()
