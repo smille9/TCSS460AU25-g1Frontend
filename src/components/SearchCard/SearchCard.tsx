@@ -1,40 +1,46 @@
 import { Box, Stack, Divider } from '@mui/material';
 import Link from 'next/link';
 import styles from './SearchCard.module.css';
+import { IShow } from 'types/tv';
+import { IMovie } from 'types/movies';
 
 interface SearchCardProps {
-  title: string;
-  year: number;
-  genres: string;
-  parental: string;
-  runtime: number;
-  director: string;
-  posterImg: string;
-  imgAltText: string;
   contentId: number;
   contentType: 'movie' | 'tv';
+  contentData: IShow | IMovie;
 }
 
-export default function SearchCard({
-  title,
-  year,
-  genres,
-  parental,
-  runtime,
-  director,
-  posterImg,
-  imgAltText,
-  contentId,
-  contentType
-}: SearchCardProps) {
+export default function SearchCard({ contentId, contentType, contentData }: SearchCardProps) {
+  // all data common to both movies and tv results
+  const normalizedData = {
+    title: '',
+    genres: '',
+    posterUrl: '',
+    imgAltText: ''
+  };
   let detailsRoute: string;
 
+  // set the route depending on the type
   if (contentType == 'movie') {
     detailsRoute = `/movies/${contentId}`;
   } else if (contentType == 'tv') {
-    detailsRoute = `/show/${contentId}`;
+    detailsRoute = `/shows/${contentId}`;
   } else {
     detailsRoute = '#';
+  }
+
+  if (contentType === 'tv') {
+    let data = contentData as IShow;
+    normalizedData.title = data.name;
+    normalizedData.genres = data.genres.join(', ');
+    normalizedData.posterUrl = data.posterURL;
+    normalizedData.imgAltText = `Poster of ${data.name}`;
+  } else {
+    let data = contentData as IMovie;
+    normalizedData.title = data.title;
+    normalizedData.genres = ''; // FIX
+    normalizedData.posterUrl = ''; // NOT YET Available
+    normalizedData.imgAltText = `Poster of ${data.title}`;
   }
 
   return (
@@ -50,14 +56,15 @@ export default function SearchCard({
       <Stack direction="row" gap="8px">
         <Box>
           <Link href={detailsRoute}>
-            <img src={posterImg} alt={imgAltText} width={96} />
+            <img src={normalizedData.posterUrl} alt={normalizedData.imgAltText} width={96} />
           </Link>
         </Box>
         <Stack>
           <Box>
             <h2>
               <Link href={detailsRoute} className={styles.cardLink}>
-                {title} ({year})
+                {contentType === 'tv' && normalizedData.title}
+                {contentType === 'movie' && `${normalizedData.title} (${(contentData as IMovie).release_year})`}
               </Link>
             </h2>
           </Box>
@@ -66,11 +73,16 @@ export default function SearchCard({
             divider={<Divider orientation="vertical" variant="middle" sx={{ backgroundColor: 'white' }} flexItem />}
             spacing={2}
           >
-            <span>{genres}</span>
-            <span>Rated {parental}</span>
-            <span>{runtime} minutes</span>
+            <span>{normalizedData.genres}</span>
+            {contentType === 'movie' && <span>Rated {(contentData as IMovie).rating}</span>}
+            {contentType === 'movie' ? (
+              <span>{(contentData as IMovie).runtime_minutes} minutes</span>
+            ) : (
+              <span>{(contentData as IShow).seasons} Seasons</span>
+            )}
           </Stack>
-          <Box>Director: {director}</Box>
+          {contentType === 'movie' && <Box>Director: (fill in)</Box>}
+          {contentType === 'tv' && <Box>Networks: {(contentData as IShow).networks.join(', ')}</Box>}
         </Stack>
       </Stack>
     </Box>
