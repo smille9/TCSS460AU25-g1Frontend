@@ -17,20 +17,20 @@ import { MovieListItem } from 'components/MovieListItem';
 import { NoShow } from 'components/TVListItem';
 
 export default function MessagesList() {
-  const [shows, setMovies] = React.useState<IMovie[]>([]);
+  const [movies, setMovies] = React.useState<IMovie[]>([]);
 
   React.useEffect(() => {
     //This would be data from our service apis (found in ../services) for now we can mock
     moviesApi
-      .getAll()
+      .search({ params: { q: 'Avatar' } })
       .then((response) => {
-        setMovies(response.data.data);
+        setMovies(response.data.data.data);
         console.dir(response);
       })
       .catch((error) => console.error(error));
   }, []);
 
-  const showsAsComponents = shows.map((movie, index, movies) => (
+  const moviesAsComponents = movies.map((movie, index, movies) => (
     <React.Fragment key={'movie list item: ' + index}>
       <MovieListItem movie={movie} />
       {index < movies.length - 1 && (
@@ -66,7 +66,7 @@ export default function MessagesList() {
           Movies
         </Typography>
         <Box sx={{ mt: 1 }}>
-          <List>{showsAsComponents.length ? showsAsComponents : <NoShow />}</List>
+          <List>{moviesAsComponents.length ? moviesAsComponents : <NoShow />}</List>
         </Box>
       </Box>
     </Container>
