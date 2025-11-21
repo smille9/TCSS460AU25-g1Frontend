@@ -133,7 +133,7 @@ moviesService.interceptors.response.use(
   (error) => {
     if (error.code === 'ECONNREFUSED') {
       const { baseURL, url, data } = error.config;
-      console.error('Connection refused. The Messages API server may be down. Attempting to connect to: ');
+      console.error('Connection refused. The Movies API server may be down. Attempting to connect to: ');
       console.error({ baseURL, url, data });
       return Promise.reject({
         message: 'Connection refused.'
@@ -233,7 +233,7 @@ tvService.interceptors.response.use(
   (error) => {
     if (error.code === 'ECONNREFUSED') {
       const { baseURL, url, data } = error.config;
-      console.error('Connection refused. The Messages API server may be down. Attempting to connect to: ');
+      console.error('Connection refused. The TV API server may be down. Attempting to connect to: ');
       console.error({ baseURL, url, data });
       return Promise.reject({
         message: 'Connection refused.'
