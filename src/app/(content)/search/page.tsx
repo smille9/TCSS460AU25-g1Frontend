@@ -2,30 +2,61 @@
 
 import { useState, useEffect } from 'react';
 import { tvApi } from 'services/tvApi';
-import { Box } from '@mui/material';
+import { moviesApi } from 'services/moviesApi';
+import { Box, Stack, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
 import { IMovie } from 'types/movies';
 import { IShow } from 'types/tv';
 
 export default function SearchPage() {
-  const [searchData, setSearchData] = useState<IMovie[] | IShow[]>([]);
+  const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
+  const [searchShowData, setSearchShowData] = useState<IShow[]>([]);
+  const [searchType, setSearchType] = useState<'movie' | 'tv'>('tv');
 
   useEffect(() => {
     tvApi
       .getAll()
       .then((response) => {
-        setSearchData(response);
+        setSearchShowData(response);
+      })
+      .catch((error) => console.error(error));
+    moviesApi
+      .getAll()
+      .then((response) => {
+        setSearchMovieData(response.data.data);
       })
       .catch((error) => console.error(error));
   }, []);
 
+  const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => setSearchType(newCategory);
+
   return (
     <Box>
-      <Box>
-        {(searchData as IShow[]).map((item) => (
-          <SearchCard key={item.iD} contentId={item.iD} contentType="tv" contentData={item} />
-        ))}
-      </Box>
+      <Stack direction="row" gap="16px">
+        {/* Search */}
+        <Stack direction="row" gap="8px">
+          {/* buttons */}
+          <ToggleButtonGroup value={searchType} exclusive onChange={handleCategoryChange}>
+            <ToggleButton value="movie">
+              <Box>Movies</Box>
+            </ToggleButton>
+            <ToggleButton value="tv">
+              <Box>TV</Box>
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
+      </Stack>
+      <Stack direction="column" gap="16px">
+        {searchShowData.length &&
+          searchType === 'tv' &&
+          searchShowData.map((item) => <SearchCard key={item.iD} contentId={item.iD} contentType={searchType} contentData={item} />)}
+
+        {searchMovieData.length &&
+          searchType === 'movie' &&
+          searchMovieData.map((item) => (
+            <SearchCard key={item.movie_id} contentId={item.movie_id} contentType={searchType} contentData={item} />
+          ))}
+      </Stack>
     </Box>
   );
 }

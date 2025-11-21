@@ -15,7 +15,7 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
   const normalizedData = {
     title: '',
     genres: '',
-    posterUrl: '',
+    posterUrl: '#',
     imgAltText: ''
   };
   let detailsRoute: string;
@@ -39,7 +39,7 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
     let data = contentData as IMovie;
     normalizedData.title = data.title;
     normalizedData.genres = ''; // FIX
-    normalizedData.posterUrl = ''; // NOT YET Available
+    normalizedData.posterUrl = '#'; // NOT YET Available
     normalizedData.imgAltText = `Poster of ${data.title}`;
   }
 
