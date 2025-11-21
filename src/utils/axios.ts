@@ -18,8 +18,8 @@ if (!process.env.CREDENTIALS_API_URL) {
 if (!process.env.MOVIES_API_URL) {
   throw new Error(
     'MOVIES_API_URL environment variable is not set. ' +
-      'Please add MESSAGES_WEB_API_URL to your .env and/or next.config.js file(s). ' +
-      'Example: MESSAGES_WEB_API_URL=http://localhost:8000'
+      'Please add MOVIES_API_URL to your .env and/or next.config.js file(s). ' +
+      'Example: MOVIES_API_URL=http://localhost:8000'
   );
 }
 
@@ -28,6 +28,22 @@ if (!process.env.MOVIES_API_KEY) {
     'MOVIES_API_KEY environment variable is not set. ' +
       'Please add MOVIES_API_KEY to your .env and/or next.config.js file(s). ' +
       'Example: MOVIES_API_KEY=your-api-key-here'
+  );
+}
+
+if (!process.env.TV_API_URL) {
+  throw new Error(
+    'TV_API_URL environment variable is not set. ' +
+      'Please add TV_API_URL to your .env and/or next.config.js file(s). ' +
+      'Example: TV_API_URL=http://localhost:8000'
+  );
+}
+
+if (!process.env.TV_API_KEY) {
+  throw new Error(
+    'TV_API_KEY environment variable is not set. ' +
+      'Please add TV_API_KEY to your .env and/or next.config.js file(s). ' +
+      'Example: TV_API_KEY=your-api-key-here'
   );
 }
 
