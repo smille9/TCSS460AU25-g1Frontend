@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { tvApi } from 'services/tvApi';
-import { moviesApi } from 'services/moviesApi';
+//import { moviesApi } from 'services/moviesApi';
 import { Box, Stack, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
 import { IMovie } from 'types/movies';
@@ -14,31 +15,51 @@ export default function SearchView() {
   const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
   const [searchShowData, setSearchShowData] = useState<IShow[]>([]);
   const [searchType, setSearchType] = useState<'movie' | 'tv'>('tv');
+  const queryParams = useSearchParams();
+
+  // useEffect(() => {
+  //   tvApi
+  //     .getAll()
+  //     .then((response) => {
+  //       setSearchShowData(response);
+  //     })
+  //     .catch((error) => console.error(error));
+  //   moviesApi
+  //     .getAll()
+  //     .then((response) => {
+  //       setSearchMovieData(response.data.data);
+  //     })
+  //     .catch((error) => console.error(error));
+  // }, []);
 
   useEffect(() => {
-    tvApi
-      .getAll()
-      .then((response) => {
-        setSearchShowData(response);
-      })
-      .catch((error) => console.error(error));
-    moviesApi
-      .getAll()
-      .then((response) => {
-        setSearchMovieData(response.data.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    const title = queryParams.get('title');
+
+    if (title) {
+      tvApi.search({ params: { name: title } }).then((response) => {
+        setSearchShowData(response.data.data);
+      });
+    }
+    setSearchMovieData([]);
+  }, [queryParams]);
 
   const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => setSearchType(newCategory);
 
   const searchForm = useFormik({
-    initialValues: {search: ''},
+    initialValues: { search: '' },
     validationSchema: Yup.object({
-      search: Yup.string().required('Search field is required')
+      search: Yup.string().required('Search field is required').max(128)
     }),
-    onSubmit: async(values, {setSubmitting}) => {
-      return;
+    onSubmit: (values, { setErrors, setSubmitting }) => {
+      tvApi.search({ params: { name: values.search } }).then((response: any) => {
+        if (response?.error) {
+          setErrors({ search: response.error });
+          setSubmitting(false);
+        } else {
+          setSearchShowData(response.data.data);
+          setSubmitting(false);
+        }
+      });
     }
   });
 
