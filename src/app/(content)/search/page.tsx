@@ -7,6 +7,8 @@ import { Box, Stack, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
 import { IMovie } from 'types/movies';
 import { IShow } from 'types/tv';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 export default function SearchPage() {
   const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
@@ -30,10 +32,24 @@ export default function SearchPage() {
 
   const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => setSearchType(newCategory);
 
+  const searchForm = useFormik({
+    initialValues: {search: ''},
+    validationSchema: Yup.object({
+      search: Yup.string().required('Search field is required')
+    }),
+    onSubmit: async(values, {setSubmitting}) => {
+      return;
+    }
+  });
+
   return (
     <Box>
       <Stack direction="row" gap="16px">
         {/* Search */}
+        <form onSubmit={searchForm.handleSubmit}>
+          <input type="text" id="search" {...searchForm.getFieldProps('search')} />
+          <button type="submit" disabled={searchForm.isSubmitting}>Search</button>
+        </form>
         <Stack direction="row" gap="8px">
           {/* buttons */}
           <ToggleButtonGroup value={searchType} exclusive onChange={handleCategoryChange}>
