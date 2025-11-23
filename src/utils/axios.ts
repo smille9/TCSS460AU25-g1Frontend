@@ -15,19 +15,35 @@ if (!process.env.CREDENTIALS_API_URL) {
   );
 }
 
-if (!process.env.MESSAGES_WEB_API_URL) {
+if (!process.env.MOVIES_API_URL) {
   throw new Error(
-    'MESSAGES_WEB_API_URL environment variable is not set. ' +
-      'Please add MESSAGES_WEB_API_URL to your .env and/or next.config.js file(s). ' +
-      'Example: MESSAGES_WEB_API_URL=http://localhost:8000'
+    'MOVIES_API_URL environment variable is not set. ' +
+      'Please add MOVIES_API_URL to your .env and/or next.config.js file(s). ' +
+      'Example: MOVIES_API_URL=http://localhost:8000'
   );
 }
 
-if (!process.env.MESSAGES_WEB_API_KEY) {
+if (!process.env.MOVIES_API_KEY) {
   throw new Error(
-    'MESSAGE_WEB_API_KEY environment variable is not set. ' +
-      'Please add MESSAGE_WEB_API_KEY to your .env and/or next.config.js file(s). ' +
-      'Example: MESSAGE_WEB_API_KEY=your-api-key-here'
+    'MOVIES_API_KEY environment variable is not set. ' +
+      'Please add MOVIES_API_KEY to your .env and/or next.config.js file(s). ' +
+      'Example: MOVIES_API_KEY=your-api-key-here'
+  );
+}
+
+if (!process.env.TV_API_URL) {
+  throw new Error(
+    'TV_API_URL environment variable is not set. ' +
+      'Please add TV_API_URL to your .env and/or next.config.js file(s). ' +
+      'Example: TV_API_URL=http://localhost:8000'
+  );
+}
+
+if (!process.env.TV_API_KEY) {
+  throw new Error(
+    'TV_API_KEY environment variable is not set. ' +
+      'Please add TV_API_KEY to your .env and/or next.config.js file(s). ' +
+      'Example: TV_API_KEY=your-api-key-here'
   );
 }
 
@@ -98,7 +114,36 @@ messagesService.interceptors.response.use(
   }
 );
 
-// ==============================|| MOCK MOVIE SERVICE ||============================== //
+// ==============================|| MOVIE SERVICE ||============================== //
+
+const moviesService = axios.create({ baseURL: process.env.MOVIES_API_URL });
+
+moviesService.interceptors.request.use(
+  async (config) => {
+    config.headers['X-API-Key'] = process.env.MOVIES_API_KEY;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+moviesService.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === 'ECONNREFUSED') {
+      const { baseURL, url, data } = error.config;
+      console.error('Connection refused. The Movies API server may be down. Attempting to connect to: ');
+      console.error({ baseURL, url, data });
+      return Promise.reject({
+        message: 'Connection refused.'
+      });
+    } else if (error.response?.status >= 500) {
+      return Promise.reject({ message: 'Server Error. Contact support' });
+    }
+    return Promise.reject((error.response && error.response.data) || 'Server connection refused');
+  }
+);
 
 const mockMovieService = {
   get: (): IMovies => {
@@ -170,6 +215,35 @@ const mockMovieService = {
 };
 
 // ==============================|| MOCK TV SERVICE ||============================== //
+
+const tvService = axios.create({ baseURL: process.env.TV_API_URL });
+
+tvService.interceptors.request.use(
+  async (config) => {
+    config.headers['X-API-Key'] = process.env.TV_API_KEY;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+tvService.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === 'ECONNREFUSED') {
+      const { baseURL, url, data } = error.config;
+      console.error('Connection refused. The TV API server may be down. Attempting to connect to: ');
+      console.error({ baseURL, url, data });
+      return Promise.reject({
+        message: 'Connection refused.'
+      });
+    } else if (error.response?.status >= 500) {
+      return Promise.reject({ message: 'Server Error. Contact support' });
+    }
+    return Promise.reject((error.response && error.response.data) || 'Server connection refused');
+  }
+);
 
 const mockTVService = {
   get: (): IShow[] => {
@@ -321,7 +395,7 @@ const mockTVService = {
 // ==============================|| EXPORTS ||============================== //
 
 export default credentialsService; // Maintain backward compatibility
-export { credentialsService, messagesService, mockMovieService, mockTVService };
+export { credentialsService, messagesService, mockMovieService, mockTVService, moviesService, tvService };
 
 // Credentials service helpers
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {

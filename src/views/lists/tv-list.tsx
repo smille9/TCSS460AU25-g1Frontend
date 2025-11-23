@@ -22,9 +22,9 @@ export default function MessagesList() {
   React.useEffect(() => {
     //This would be data from our service apis (found in ../services) for now we can mock
     tvApi
-      .getAll()
+      .search({ params: { name: 'Uzumaki' } })
       .then((response) => {
-        setShows(response);
+        setShows(response.data.data);
         console.dir(response);
       })
       .catch((error) => console.error(error));
