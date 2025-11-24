@@ -204,41 +204,55 @@ export default function MovieCreate() {
                                 {/* Actors FieldArray */}
                                 <FieldArray name="actors">
                                     {({ push, remove }) => (
-                                        <Stack spacing={1}>
+                                        <Stack spacing={2}>
                                             <Typography variant="subtitle1">Actors</Typography>
+
                                             {values.actors.map((actor, index) => (
-                                                <Stack key={index} direction="row" spacing={1} alignItems="center">
-                                                    <Stack spacing={0.5} flex={1}>
-                                                        <InputLabel>Name</InputLabel>
+                                                <Stack key={index} spacing={1}>
+
+                                                    {/* Row label */}
+                                                    <Typography variant="subtitle2">Actor {index + 1}</Typography>
+
+                                                    {/* Inputs row */}
+                                                    <Box display="flex" gap={2} alignItems="center">
+
                                                         <OutlinedInput
+                                                            fullWidth
                                                             name={`actors[${index}].name`}
                                                             value={actor.name}
                                                             onChange={handleChange}
                                                             onBlur={handleBlur}
                                                             placeholder="Actor Name"
                                                         />
-                                                    </Stack>
-                                                    <Stack spacing={0.5} flex={1}>
-                                                        <InputLabel>Character</InputLabel>
+
                                                         <OutlinedInput
+                                                            fullWidth
                                                             name={`actors[${index}].character`}
                                                             value={actor.character}
                                                             onChange={handleChange}
                                                             onBlur={handleBlur}
                                                             placeholder="Character Name"
                                                         />
-                                                    </Stack>
-                                                    <IconButton color="error" onClick={() => remove(index)}>
-                                                        <RemoveCircleOutlineIcon />
-                                                    </IconButton>
+
+                                                        <IconButton color="error" onClick={() => remove(index)}>
+                                                            <RemoveCircleOutlineIcon />
+                                                        </IconButton>
+
+                                                    </Box>
+
                                                 </Stack>
                                             ))}
-                                            <Button startIcon={<AddCircleOutlineIcon />} onClick={() => push({ name: '', character: '' })}>
+
+                                            <Button
+                                                startIcon={<AddCircleOutlineIcon />}
+                                                onClick={() => push({ name: '', character: '' })}
+                                            >
                                                 Add Actor
                                             </Button>
                                         </Stack>
                                     )}
                                 </FieldArray>
+
 
                                 <Button type="submit" variant="contained" color="primary" fullWidth disabled={isSubmitting}>
                                     Create Movie
