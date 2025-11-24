@@ -80,7 +80,7 @@ export default function SearchView() {
               setErrors({ search: response.error });
               setSubmitting(false);
             } else {
-              setSearchShowData(response.data.data.data);
+              setSearchShowData(response.data.data);
               setSubmitting(false);
             }
           });
@@ -89,7 +89,7 @@ export default function SearchView() {
               setErrors({ search: response.error });
               setSubmitting(false);
             } else {
-              setSearchMovieData(response.data.data);
+              setSearchMovieData(response.data.data.data);
               setSubmitting(false);
             }
           });
@@ -129,11 +129,11 @@ export default function SearchView() {
         </Stack>
       </Stack>
       <Stack direction="column" gap="16px">
-        {searchShowData && Array.isArray(searchShowData) && searchShowData.length && searchType === 'tv'
+        {searchShowData && searchShowData.length && searchType === 'tv'
           ? searchShowData.map((item) => <SearchCard key={item.iD} contentId={item.iD} contentType={searchType} contentData={item} />)
           : searchType === 'tv' && <NoSearchResults type="TV show" />}
 
-        {searchMovieData && Array.isArray(searchMovieData) && searchShowData.length && searchType === 'movie'
+        {searchMovieData && searchMovieData.length && searchType === 'movie'
           ? searchMovieData.map((item) => (
               <SearchCard key={item.movie_id} contentId={item.movie_id} contentType={searchType} contentData={item} />
             ))
