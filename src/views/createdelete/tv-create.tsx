@@ -248,6 +248,17 @@ export default function ShowCreate() {
                         onChange={handleChange}
                         placeholder={field.placeholder}
                         error={touched[field.name as keyof ShowFormValues] && Boolean(errors[field.name as keyof ShowFormValues])}
+                        onWheel={field.type === 'number' ? (e) => e.currentTarget.blur() : undefined}
+                        sx={field.type === 'number' ? {
+                          '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                          },
+                          '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0,
+                          },
+                        } : undefined}
+
                       />
                       {touched[field.name as keyof ShowFormValues] && errors[field.name as keyof ShowFormValues] && (
                         <FormHelperText error>{errors[field.name as keyof ShowFormValues] as string}</FormHelperText>
