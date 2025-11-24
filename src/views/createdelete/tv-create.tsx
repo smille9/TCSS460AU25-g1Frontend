@@ -16,6 +16,8 @@ import { Formik, FieldArray, FormikTouched, FormikErrors } from 'formik';
 // project imports
 import { openSnackbar } from 'api/snackbar';
 import { SnackbarProps } from 'types/snackbar';
+import { tvApi } from 'services/tvApi';
+import { sanitizeCommaSeparated } from 'utils/formHelpers';
 
 // --- Types ---
 interface CastMember {
@@ -69,33 +71,90 @@ export default function ShowCreate() {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    firstAirDate: Yup.date().required('First air date is required'),
-    lastAirDate: Yup.date().required('Last air date is required'),
-    seasons: Yup.number().min(0).required('Seasons is required'),
-    episodes: Yup.number().min(0).required('Episodes is required'),
-    status: Yup.string().required('Status is required'),
+    originalName: Yup.string().optional(),
+
+    firstAirDate: Yup.date()
+      .required('First air date is required'),
+
+    lastAirDate: Yup.date()
+      .required('Last air date is required')
+      .min(Yup.ref('firstAirDate'), 'Last air date cannot be before first air date'),
+
+    seasons: Yup.number().min(0, 'Seasons cannot be negative').required('Seasons is required'),
+    episodes: Yup.number().min(0, 'Episodes cannot be negative').required('Episodes is required'),
+
+    status: Yup.string()
+      .oneOf(['Returning Series', 'Ended', 'Hiatus', 'Canceled'], 'Status must be one of: Returning Series, Ended, Hiatus, Canceled')
+      .required('Status is required'),
+
     genres: Yup.string().required('At least one genre is required'),
-    cast: Yup.array().of(
-      Yup.object().shape({
-        name: Yup.string().required('Cast member name is required'),
-        character: Yup.string().required('Character name is required'),
-        profileUrl: Yup.string().url('Must be a valid URL').optional()
-      })
-    )
+
+    overview: Yup.string().optional(),
+
+    popularity: Yup.number()
+      .min(0, 'Popularity cannot be negative')
+      .required('Popularity is required'),
+
+    tMDbRating: Yup.number()
+      .min(0, 'Rating cannot be less than 0')
+      .max(10, 'Rating cannot be more than 10')
+      .required('Rating is required'),
+
+    voteCount: Yup.number()
+      .min(0, 'Vote count cannot be negative')
+      .required('Vote count is required'),
+
+    posterURL: Yup.string().url('Poster must be a valid URL').optional(),
+    backdropURL: Yup.string().url('Backdrop must be a valid URL').optional(),
+
+    creators: Yup.string()
+      .required('Creators is required'),
+
+    networks: Yup.string()
+      .required('Networks is required'),
+
+    studios: Yup.string()
+      .required('Studios is required'),
+
+    cast: Yup.array()
+      .of(
+        Yup.object().shape({
+          name: Yup.string().required('Cast name is required'),
+          character: Yup.string().required('Character is required'),
+          profileUrl: Yup.string().url('Profile URL must be valid').optional(),
+        })
+      )
   });
 
   const handleSubmit = async (values: ShowFormValues, { setSubmitting, resetForm }: any) => {
     try {
       const payload = {
-        ...values,
-        genres: values.genres.split(',').map((g) => g.trim()),
-        creators: values.creators.split(',').map((c) => c.trim()),
-        networks: values.networks.split(',').map((n) => n.trim()),
-        studios: values.studios.split(',').map((s) => s.trim())
+        name: values.name,
+        originalName: values.originalName,
+        firstAirDate: values.firstAirDate,
+        lastAirDate: values.lastAirDate,
+        seasons: Number(values.seasons),
+        episodes: Number(values.episodes),
+        status: values.status,
+        genres: sanitizeCommaSeparated(values.genres),
+        overview: values.overview,
+        popularity: Number(values.popularity),
+        tMDbRating: Number(values.tMDbRating),
+        voteCount: Number(values.voteCount),
+        posterURL: values.posterURL,
+        backdropURL: values.backdropURL,
+        creators: sanitizeCommaSeparated(values.creators),
+        networks: sanitizeCommaSeparated(values.networks),
+        studios: sanitizeCommaSeparated(values.studios),
+        cast: values.cast.map(c => ({
+          name: c.name,
+          character: c.character,
+          profileUrl: c.profileUrl
+        }))
       };
 
-      // --- API call ---
-      // await fetch('/api/shows', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      await tvApi.create(payload);
+      console.log(payload);
 
       openSnackbar({
         open: true,
@@ -165,7 +224,7 @@ export default function ShowCreate() {
                     { label: 'Last Air Date', name: 'lastAirDate', type: 'date' },
                     { label: 'Seasons', name: 'seasons', placeholder: 'e.g. 5', type: 'number' },
                     { label: 'Episodes', name: 'episodes', placeholder: 'e.g. 62', type: 'number' },
-                    { label: 'Status', name: 'status', placeholder: 'e.g. Ended / Returning', type: 'text' },
+                    { label: 'Status', name: 'status', placeholder: 'Returning Series, Ended, Hiatus, Canceled', type: 'text' },
                     { label: 'Genres (comma-separated)', name: 'genres', placeholder: 'Drama, Thriller', type: 'text' },
                     { label: 'Overview', name: 'overview', placeholder: 'Brief description...', type: 'text' },
                     { label: 'Popularity', name: 'popularity', placeholder: 'e.g. 123.45', type: 'number' },
