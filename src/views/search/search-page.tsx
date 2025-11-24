@@ -6,10 +6,12 @@ import { tvApi } from 'services/tvApi';
 //import { moviesApi } from 'services/moviesApi';
 import { Box, Stack, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
+import NoSearchResults from 'components/SearchCard/NoSearchResults';
 import { IMovie } from 'types/movies';
 import { IShow } from 'types/tv';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { moviesApi } from 'services/moviesApi';
 
 export default function SearchView() {
   const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
@@ -46,20 +48,56 @@ export default function SearchView() {
   const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => setSearchType(newCategory);
 
   const searchForm = useFormik({
-    initialValues: { search: '' },
+    initialValues: { search: '', searchBy: 'title' },
     validationSchema: Yup.object({
       search: Yup.string().required('Search field is required').max(128)
     }),
     onSubmit: (values, { setErrors, setSubmitting }) => {
-      tvApi.search({ params: { name: values.search } }).then((response: any) => {
-        if (response?.error) {
-          setErrors({ search: response.error });
+      switch (values.searchBy) {
+        case 'title':
+          tvApi.search({ params: { name: values.search } }).then((response: any) => {
+            if (response?.error) {
+              setErrors({ search: response.error });
+              setSubmitting(false);
+            } else {
+              setSearchShowData(response.data.data);
+              setSubmitting(false);
+            }
+          });
+          moviesApi.search({ params: { q: values.search } }).then((response: any) => {
+            if (response?.error) {
+              setErrors({ search: response.error });
+              setSubmitting(false);
+            } else {
+              setSearchMovieData(response.data.data.data);
+              setSubmitting(false);
+            }
+          });
+          break;
+        case 'actor':
+          tvApi.actorSearch({ params: { castMember: values.search } }).then((response: any) => {
+            if (response?.error) {
+              setErrors({ search: response.error });
+              setSubmitting(false);
+            } else {
+              setSearchShowData(response.data.data.data);
+              setSubmitting(false);
+            }
+          });
+          moviesApi.searchByActor({ params: { actor: values.search } }).then((response: any) => {
+            if (response?.error) {
+              setErrors({ search: response.error });
+              setSubmitting(false);
+            } else {
+              setSearchMovieData(response.data.data);
+              setSubmitting(false);
+            }
+          });
+          break;
+        default:
+          setErrors({ searchBy: 'Improper search-by filter' });
           setSubmitting(false);
-        } else {
-          setSearchShowData(response.data.data);
-          setSubmitting(false);
-        }
-      });
+      }
     }
   });
 
@@ -69,7 +107,14 @@ export default function SearchView() {
         {/* Search */}
         <form onSubmit={searchForm.handleSubmit}>
           <input type="text" id="search" {...searchForm.getFieldProps('search')} />
-          <button type="submit" disabled={searchForm.isSubmitting}>Search</button>
+          <button type="submit" disabled={searchForm.isSubmitting}>
+            Search
+          </button>
+          <label htmlFor="searchBy">Search by:</label>
+          <select id="searchBy" {...searchForm.getFieldProps('searchBy')}>
+            <option value="title">Title</option>
+            <option value="actor">Actor</option>
+          </select>
         </form>
         <Stack direction="row" gap="8px">
           {/* buttons */}
@@ -84,15 +129,15 @@ export default function SearchView() {
         </Stack>
       </Stack>
       <Stack direction="column" gap="16px">
-        {searchShowData.length &&
-          searchType === 'tv' &&
-          searchShowData.map((item) => <SearchCard key={item.iD} contentId={item.iD} contentType={searchType} contentData={item} />)}
+        {searchShowData && Array.isArray(searchShowData) && searchShowData.length && searchType === 'tv'
+          ? searchShowData.map((item) => <SearchCard key={item.iD} contentId={item.iD} contentType={searchType} contentData={item} />)
+          : searchType === 'tv' && <NoSearchResults type="TV show" />}
 
-        {searchMovieData.length &&
-          searchType === 'movie' &&
-          searchMovieData.map((item) => (
-            <SearchCard key={item.movie_id} contentId={item.movie_id} contentType={searchType} contentData={item} />
-          ))}
+        {searchMovieData && Array.isArray(searchMovieData) && searchShowData.length && searchType === 'movie'
+          ? searchMovieData.map((item) => (
+              <SearchCard key={item.movie_id} contentId={item.movie_id} contentType={searchType} contentData={item} />
+            ))
+          : searchType === 'movie' && <NoSearchResults type="movie" />}
       </Stack>
     </Box>
   );
