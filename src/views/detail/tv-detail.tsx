@@ -7,27 +7,27 @@ import { Box, Stack, Typography, Chip, Card, CardMedia, Rating, Avatar } from '@
 // project import
 import { tvApi } from 'services/tvApi';
 import { IShow, ActorObj } from 'types/tv';
+import { NoShow } from 'components/TVListItem';
 
 export default function TvDetail() {
-  const [show, setShow] = React.useState<IShow>();
+  const [show, setShow] = React.useState<IShow | undefined>(undefined);
 
   //Capture Route params
   const { id } = useParams();
   React.useEffect(() => {
     if (!id) return;
-    //This would be data from our service apis (found in ../services) for now we can mock
     tvApi
-      .getByID(Number(id)) //0 for quality, 1 for bad with mocks.
+      .getByID(Number(id))
       .then((response) => {
-        setShow(response);
+        setShow(response.data.data);
         console.dir(response);
       })
       .catch((error) => console.error(error));
   }, [id]);
 
-  //If show is undefined
+  //If show is undefined, show empty container
   if (!show) {
-    return <div>Show was not found with id: {id ?? 'undefined'}</div>;
+    return <NoShow />;
   }
 
   return (
@@ -67,7 +67,7 @@ export default function TvDetail() {
 
             {/* Genres*/}
             <Stack direction="row" spacing={1}>
-              {show.genres.map((genre) => (
+              {show.genres?.map((genre) => (
                 <Chip key={genre} label={genre} size="medium" />
               ))}
             </Stack>
@@ -138,14 +138,14 @@ export default function TvDetail() {
           }}
         >
           <Stack direction="row" spacing={7}>
-            <Typography>Created by {show.creators.join(', ')}</Typography>
+            <Typography>Created by {show.creators?.join(', ')}</Typography>
 
             <Stack>
               <span style={{ whiteSpace: 'nowrap' }}>
-                <span style={{ fontWeight: 700 }}>Network(s):</span> {show.networks.join(', ')}
+                <span style={{ fontWeight: 700 }}>Network(s):</span> {show.networks?.join(', ')}
               </span>
               <span style={{ whiteSpace: 'nowrap' }}>
-                <span style={{ fontWeight: 700 }}>Studio(s):</span> {show.studios.join(', ')}
+                <span style={{ fontWeight: 700 }}>Studio(s):</span> {show.studios?.join(', ')}
               </span>
             </Stack>
           </Stack>
