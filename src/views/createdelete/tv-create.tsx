@@ -149,11 +149,7 @@ export default function ShowCreate() {
           <Typography color="secondary">Fill in the details below to create a new show.</Typography>
         </Stack>
 
-        <Formik<ShowFormValues>
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
+        <Formik<ShowFormValues> initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
           {({ values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting }) => {
             const castTouched = touched.cast as FormikTouched<CastMember>[] | undefined;
             const castErrors = errors.cast as FormikErrors<CastMember>[] | undefined;
@@ -225,8 +221,8 @@ export default function ShowCreate() {
                                     key === 'name'
                                       ? 'Bryan Cranston'
                                       : key === 'character'
-                                      ? 'Walter White'
-                                      : 'https://image.tmdb.org/t/p/...jpg'
+                                        ? 'Walter White'
+                                        : 'https://image.tmdb.org/t/p/...jpg'
                                   }
                                   error={castTouched?.[index]?.[key] && Boolean(castErrors?.[index]?.[key])}
                                 />
