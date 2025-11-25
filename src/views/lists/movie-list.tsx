@@ -65,10 +65,28 @@ export default function MoviesList() {
 
     getWatchlist();
   }, [userEmail]);
-  console.log('Movies with posters:', movies);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch('/api/watchlist/movies', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, action: 'remove' })
+      });
+
+      if (response.ok) {
+        setMovies((prevMovies) => prevMovies.filter((movie) => movie.movie_id !== id));
+      } else {
+        console.error('Failed to delete movie from watchlist');
+      }
+    } catch (error) {
+      console.error('Error deleting movie:', error);
+    }
+  };
+
   const moviesAsComponents = movies.map((movie, index, movies) => (
     <React.Fragment key={'movie list item: ' + index}>
-      <MovieListItem movie={movie} />
+      <MovieListItem movie={movie} onDelete={handleDelete} />
       {index < movies.length - 1 && (
         <Divider
           sx={(theme) => ({

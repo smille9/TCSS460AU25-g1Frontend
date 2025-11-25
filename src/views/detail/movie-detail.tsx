@@ -7,6 +7,7 @@ import { Box, Stack, Typography, Card, CardMedia, Rating } from '@mui/material';
 // project import
 import { moviesApi } from 'services/moviesApi';
 import { IMovie, IPoster } from 'types/movies';
+import { WatchlistToggle } from 'components/WatchlistToggle';
 
 export default function MovieDetail() {
   const [movie, setMovie] = React.useState<IMovie>();
@@ -74,10 +75,13 @@ export default function MovieDetail() {
           </Box>
 
           {/* Component 1 box, Title Genre Rating synopsis stack*/}
-          <Stack spacing={2} sx={{ padding: 4 }}>
-            <Typography variant="h4" component="h1">
-              {movie.title}
-            </Typography>
+          <Stack spacing={2} sx={{ padding: 4, flex: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
+                {movie.title}
+              </Typography>
+              <WatchlistToggle id={movie.movie_id} type="movies" />
+            </Box>
 
             {/* Rating, votes, runtime, and returning,  */}
             <Typography>

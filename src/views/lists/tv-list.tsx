@@ -58,9 +58,28 @@ export default function TVList() {
     getWatchlist();
   }, [userEmail]);
 
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch('/api/watchlist/tv', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, action: 'remove' })
+      });
+
+      if (response.ok) {
+        // Remove the show from local state
+        setShows((prevShows) => prevShows.filter((show) => show.iD !== id));
+      } else {
+        console.error('Failed to delete show from watchlist');
+      }
+    } catch (error) {
+      console.error('Error deleting show:', error);
+    }
+  };
+
   const showsAsComponents = shows.map((show, index, shows) => (
     <React.Fragment key={'show list item: ' + index}>
-      <TVListItem show={show} />
+      <TVListItem show={show} onDelete={handleDelete} />
       {index < shows.length - 1 && (
         <Divider
           sx={(theme) => ({

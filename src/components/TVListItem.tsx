@@ -1,13 +1,14 @@
 import { useRouter } from 'next/navigation';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
-import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 
 // project import
 import { IShow } from 'types/tv';
 
-export function TVListItem({ show }: { show: IShow }) {
+export function TVListItem({ show, onDelete }: { show: IShow; onDelete: (id: number) => void }) {
   const router = useRouter();
 
   // function onItemClick(msg: IMessage) {
@@ -27,7 +28,14 @@ export function TVListItem({ show }: { show: IShow }) {
   }
 
   return (
-    <ListItem disablePadding>
+    <ListItem
+      secondaryAction={
+        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(show.iD)}>
+          <DeleteIcon />
+        </IconButton>
+      }
+      disablePadding
+    >
       <ListItemButton onClick={() => onItemClick(show)}>
         <ListItemAvatar>
           {show.posterURL ? (
