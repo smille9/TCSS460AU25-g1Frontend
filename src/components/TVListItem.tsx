@@ -2,6 +2,7 @@ import { useRouter } from 'next/navigation';
 
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
 
 // project import
 import { IShow } from 'types/tv';
@@ -29,7 +30,15 @@ export function TVListItem({ show }: { show: IShow }) {
     <ListItem disablePadding>
       <ListItemButton onClick={() => onItemClick(show)}>
         <ListItemAvatar>
-          <Avatar alt="Poster" src={show.posterURL} />
+          {show.posterURL ? (
+            <Avatar src={show.posterURL} alt={show.name}>
+              <LiveTvIcon />
+            </Avatar>
+          ) : (
+            <Avatar>
+              <LiveTvIcon />
+            </Avatar>
+          )}
         </ListItemAvatar>
         <ListItemText
           primary={show.name}

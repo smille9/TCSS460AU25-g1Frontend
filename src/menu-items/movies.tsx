@@ -16,7 +16,7 @@ const icons = { MovieIcon };
 
 const samplePage: NavItemType = {
   id: 'movies',
-  title: <FormattedMessage id="Movies" />,
+  title: <FormattedMessage id="Movie Watchlist" />,
   type: 'group',
   url: '/movies',
   icon: icons.MovieIcon

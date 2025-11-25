@@ -18,6 +18,7 @@ const nextConfig = {
     ]
   },
   env: {
+    SUPABASE_CONNECTION_STRING: process.env.SUPABASE_CONNECTION_STRING,
     NEXT_APP_VERSION: process.env.REACT_APP_VERSION,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET_KEY,
     NEXTAUTH_SECRET_KEY: process.env.NEXTAUTH_SECRET_KEY,
