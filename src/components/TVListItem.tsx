@@ -22,7 +22,7 @@ export function TVListItem({ show }: { show: IShow }) {
   // }
 
   function onItemClick(show: IShow) {
-    router.push('[ROUTE TO SHOW DETAIL PAGE]');
+    router.push(`/shows/${show.iD}`);
   }
 
   return (
