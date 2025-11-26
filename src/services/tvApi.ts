@@ -1,8 +1,7 @@
 import { tvService } from 'utils/axios';
 
 export const tvApi = {
-  search: (config: {
-    params: { name?: string; genre?: string; network?: string; actor?: string; minrating?: number; limit?: number; offset?: number };
-  }) => tvService.get('/series', config),
-  getByID: (id: number) => tvService.get(`/series/${id}`)
+  search: (config: { params: { name: string } }) => tvService.get('/series', config),
+  actorSearch: (config: { params: { castMember: string } }) => tvService.get('/series', config),
+  getByID: (id: number) => Promise.resolve(mockTVService.getByID(id))
 };
