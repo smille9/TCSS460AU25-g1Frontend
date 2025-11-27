@@ -12,11 +12,13 @@ import { IShow } from 'types/tv';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { moviesApi } from 'services/moviesApi';
+import { FilterType, IFilterMethodParams, filterMethods } from './filterMethods';
 
 export default function SearchView() {
   const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
   const [searchShowData, setSearchShowData] = useState<IShow[]>([]);
-  const [searchType, setSearchType] = useState<'movie' | 'tv'>('tv');
+  const [searchType, setSearchType] = useState<FilterType>('tv');
+  const [filterOptions, setFilterOptions] = useState<IFilterMethodParams[]>(filterMethods.tv);
   const queryParams = useSearchParams();
 
   // useEffect(() => {
@@ -45,7 +47,15 @@ export default function SearchView() {
     setSearchMovieData([]);
   }, [queryParams]);
 
-  const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => setSearchType(newCategory);
+  const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => {
+    setSearchType(newCategory);
+    //setFilterOptions((filterMethods.filter((item) => item.api === newCategory)).params);
+    if (newCategory === 'movie') {
+      setFilterOptions(filterMethods.movie);
+    } else {
+      setFilterOptions(filterMethods.tv);
+    }
+  };
 
   const searchForm = useFormik({
     initialValues: { search: '', searchBy: 'title' },
@@ -111,9 +121,20 @@ export default function SearchView() {
             Search
           </button>
           <label htmlFor="searchBy">Search by:</label>
+          {/*
           <select id="searchBy" {...searchForm.getFieldProps('searchBy')}>
             <option value="title">Title</option>
             <option value="actor">Actor</option>
+          </select>*/}
+
+          <select id="searchBy" {...searchForm.getFieldProps('searchBy')}>
+            {filterOptions
+              .filter((item) => item.type === 'text')
+              .map((opt) => (
+                <option key={searchType + opt.param} value={opt.param}>
+                  {opt.label}
+                </option>
+              ))}
           </select>
         </form>
         <Stack direction="row" gap="8px">
