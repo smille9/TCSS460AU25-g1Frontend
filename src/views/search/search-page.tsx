@@ -75,7 +75,7 @@ export default function SearchView() {
           });
           break;
         case 'actor':
-          tvApi.actorSearch({ params: { castMember: values.search } }).then((response: any) => {
+          tvApi.search({ params: { castMember: values.search } }).then((response: any) => {
             if (response?.error) {
               setErrors({ search: response.error });
               setSubmitting(false);
@@ -84,7 +84,7 @@ export default function SearchView() {
               setSubmitting(false);
             }
           });
-          moviesApi.searchByActor({ params: { actor: values.search } }).then((response: any) => {
+          moviesApi.searchByFilter({ params: { actor: values.search } }).then((response: any) => {
             if (response?.error) {
               setErrors({ search: response.error });
               setSubmitting(false);
