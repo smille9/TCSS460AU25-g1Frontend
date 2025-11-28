@@ -1,10 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-// import { useSearchParams } from 'next/navigation';
-// import { tvApi } from 'services/tvApi';
-// import { moviesApi } from 'services/moviesApi';
-import { Box, Stack, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Box, Stack, ToggleButtonGroup, ToggleButton, Button } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
 import NoSearchResults from 'components/SearchCard/NoSearchResults';
 import { IMovie } from 'types/movies';
@@ -13,11 +10,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FilterType, IFilterMethodParams, filterMethods, searchMappings } from './filterMethods';
 
+const PAGE_SIZE = 10;
+
 export default function SearchView() {
   const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
   const [searchShowData, setSearchShowData] = useState<IShow[]>([]);
   const [searchType, setSearchType] = useState<FilterType>('tv');
   const [filterOptions, setFilterOptions] = useState<IFilterMethodParams[]>(filterMethods.tv);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   //const queryParams = useSearchParams();
 
   // useEffect(() => {
@@ -33,7 +33,9 @@ export default function SearchView() {
 
   const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => {
     setSearchType(newCategory);
-    //setFilterOptions((filterMethods.filter((item) => item.api === newCategory)).params);
+    setCurrentPage(1); // reset the page when the user switches between movies and tv results
+    searchForm.submitForm(); // RESUBMIT form to get page 1
+    // Helps determine the dropdown options for filters
     if (newCategory === 'movie') {
       setFilterOptions(filterMethods.movie);
     } else {
@@ -53,7 +55,11 @@ export default function SearchView() {
         const { tv, movie } = searchMappings[searchBy];
 
         try {
-          const [tvResponse, movieResponse] = await Promise.all([tv(values.search), movie(values.search)]);
+          const offset = (currentPage - 1) * PAGE_SIZE;
+          const pagination = { limit: PAGE_SIZE, offset };
+
+          // TODO: Pass limit and offset to the API calls
+          const [tvResponse, movieResponse] = await Promise.all([tv(values.search, pagination), movie(values.search, pagination)]);
 
           setSearchShowData(tvResponse.data.data);
           setSearchMovieData(movieResponse.data.data.data);
@@ -69,6 +75,21 @@ export default function SearchView() {
       }
     }
   });
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      searchForm.submitForm(); // Re-submit the form with new page
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+    searchForm.submitForm(); // Re-submit the form with new page
+  };
+
+  // to control whether pagination buttons are visible
+  const hasResults = (searchType === 'tv' && searchShowData.length > 0) || (searchType === 'movie' && searchMovieData.length > 0);
 
   return (
     <Box>
@@ -113,6 +134,19 @@ export default function SearchView() {
             ))
           : searchType === 'movie' && <NoSearchResults type="movie" />}
       </Stack>
+
+      {/* Pagination Controls at bottom too */}
+      {hasResults && (
+        <Stack direction="row" alignItems="center" justifyContent="center" gap="16px" sx={{ my: 2 }}>
+          <Button variant="outlined" onClick={handlePreviousPage} disabled={currentPage === 1 || searchForm.isSubmitting}>
+            Previous
+          </Button>
+          <span>Page {currentPage}</span>
+          <Button variant="outlined" onClick={handleNextPage} disabled={searchForm.isSubmitting}>
+            Next
+          </Button>
+        </Stack>
+      )}
     </Box>
   );
 }

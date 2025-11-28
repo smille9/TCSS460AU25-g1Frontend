@@ -4,28 +4,30 @@ import { tvApi } from "services/tvApi";
 export const searchMappings = {
   default: {
     /* Search by name by default */
-    tv: (query: string) => tvApi.search({ params: { name: query } }),
-    movie: (query: string) => moviesApi.search({ params: { q: query } })
+    tv: (query: string, pagination?: { limit?: number; offset?: number }) => tvApi.search({ params: { name: query, ...pagination } }),
+    movie: (query: string, pagination?: { limit?: number; offset?: number }) => moviesApi.search({ params: { q: query, ...pagination } })
   },
   title: {
-    tv: (query: string) => searchMappings.default.tv(query),
-    movie: (query: string) => searchMappings.default.movie(query)
+    tv: (query: string, pagination?: { limit?: number; offset?: number }) => searchMappings.default.tv(query, pagination),
+    movie: (query: string, pagination?: { limit?: number; offset?: number }) => searchMappings.default.movie(query, pagination)
   },
   actor: {
-    tv: (query: string) => tvApi.search({ params: { castMember: query } }),
-    movie: (query: string) => moviesApi.searchByFilter({ params: { actor: query } })
+    tv: (query: string, pagination?: { limit?: number; offset?: number }) => tvApi.search({ params: { castMember: query, ...pagination } }),
+    movie: (query: string, pagination?: { limit?: number; offset?: number }) =>
+      moviesApi.searchByFilter({ params: { actor: query, ...pagination } })
   },
   genre: {
-    tv: (query: string) => tvApi.search({ params: { genre: query } }),
-    movie: (query: string) => moviesApi.searchByFilter({ params: { genre: query } })
+    tv: (query: string, pagination?: { limit?: number; offset?: number }) => tvApi.search({ params: { genre: query, ...pagination } }),
+    movie: (query: string, pagination?: { limit?: number; offset?: number }) =>
+      moviesApi.searchByFilter({ params: { genre: query, ...pagination } })
   },
   network: {
-    tv: (query: string) => tvApi.search({ params: { network: query } }),
-    movie: (query: string) => searchMappings.default.movie(query)
+    tv: (query: string, pagination?: { limit?: number; offset?: number }) => tvApi.search({ params: { network: query, ...pagination } }),
+    movie: (query: string, pagination?: { limit?: number; offset?: number }) => searchMappings.default.movie(query, pagination)
   },
   director: {
-    tv: (query: string) => searchMappings.default.tv(query),
-    movie: (query: string) => moviesApi.searchByFilter({ params: { director: query } })
+    tv: (query: string, pagination?: { limit?: number; offset?: number }) => searchMappings.default.tv(query, pagination),
+    movie: (query: string, pagination?: { limit?: number; offset?: number }) => moviesApi.searchByFilter({ params: { director: query, ...pagination } })
   }
 };
 
