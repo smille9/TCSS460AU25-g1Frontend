@@ -2,12 +2,12 @@ import { Box, Stack, Divider } from '@mui/material';
 import Link from 'next/link';
 import styles from './SearchCard.module.css';
 import { IShow } from 'types/tv';
-import { IMovie } from 'types/movies';
+import { IMovieDetailed } from 'types/movies';
 
 interface SearchCardProps {
   contentId: number;
   contentType: 'movie' | 'tv';
-  contentData: IShow | IMovie;
+  contentData: IShow | IMovieDetailed;
 }
 
 export default function SearchCard({ contentId, contentType, contentData }: SearchCardProps) {
@@ -36,10 +36,10 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
     normalizedData.posterUrl = data.posterURL;
     normalizedData.imgAltText = `Poster of ${data.name}`;
   } else {
-    let data = contentData as IMovie;
+    let data = contentData as IMovieDetailed;
     normalizedData.title = data.title;
-    normalizedData.genres = ''; // FIX
-    normalizedData.posterUrl = '#'; // NOT YET Available
+    normalizedData.genres = data.genres;
+    normalizedData.posterUrl = data.posterUrl;
     normalizedData.imgAltText = `Poster of ${data.title}`;
   }
 
@@ -54,7 +54,10 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
       }}
     >
       <Stack direction="row" gap="8px">
-        <Box>
+        <Box sx={{
+            width: '96px'
+          }}
+        >
           <Link href={detailsRoute}>
             <img src={normalizedData.posterUrl} alt={normalizedData.imgAltText} width={96} />
           </Link>
@@ -64,7 +67,7 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
             <h2>
               <Link href={detailsRoute} className={styles.cardLink}>
                 {contentType === 'tv' && normalizedData.title}
-                {contentType === 'movie' && `${normalizedData.title} (${(contentData as IMovie).release_year})`}
+                {contentType === 'movie' && `${normalizedData.title} (${(contentData as IMovieDetailed).release_year})`}
               </Link>
             </h2>
           </Box>
@@ -74,14 +77,14 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
             spacing={2}
           >
             <span>{normalizedData.genres}</span>
-            {contentType === 'movie' && <span>Rated {(contentData as IMovie).rating}</span>}
+            {contentType === 'movie' && <span>Rated {(contentData as IMovieDetailed).rating}</span>}
             {contentType === 'movie' ? (
-              <span>{(contentData as IMovie).runtime_minutes} minutes</span>
+              <span>{(contentData as IMovieDetailed).runtime_minutes} minutes</span>
             ) : (
               <span>{(contentData as IShow).seasons} Seasons</span>
             )}
           </Stack>
-          {contentType === 'movie' && <Box>Director: (fill in)</Box>}
+          {contentType === 'movie' && <Box>Director: {(contentData as IMovieDetailed).director_name}</Box>}
           {contentType === 'tv' && <Box>Networks: {(contentData as IShow).networks.join(', ')}</Box>}
         </Stack>
       </Stack>

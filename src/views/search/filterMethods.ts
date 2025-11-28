@@ -1,5 +1,5 @@
-import { moviesApi } from "services/moviesApi";
-import { tvApi } from "services/tvApi";
+import { moviesApi } from 'services/moviesApi';
+import { tvApi } from 'services/tvApi';
 
 export const searchMappings = {
   default: {

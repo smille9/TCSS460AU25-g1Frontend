@@ -22,3 +22,38 @@ export interface IMovies {
     hasPrevious: boolean;
   };
 }
+export interface IMovieWithPoster extends IMovie {
+  posterUrl: string;
+  backdropUrl: string;
+}
+
+export interface IPoster {
+  posterUrl: string;
+  backdropUrl: string;
+}
+
+/** Unofficial interface based on response data (group has not updated their docs) */
+export interface IMovieDetailed extends IMovieWithPoster {
+  overview: string;
+  genres: string;
+  director_name: string;
+  budget: string;
+  studios: string;
+  collection: string;
+  original_title: string;
+}
+
+export interface IMoviesDetailed {
+  success: boolean;
+  message: string;
+  data: {
+    data: IMovieDetailed[];
+  };
+  pagination: {
+    limit: number;
+    offset: number;
+    totalCount: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+  };
+}

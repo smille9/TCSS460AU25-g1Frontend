@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Box, Stack, ToggleButtonGroup, ToggleButton, Button } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
 import NoSearchResults from 'components/SearchCard/NoSearchResults';
-import { IMovie } from 'types/movies';
+import { IMovieDetailed } from 'types/movies';
 import { IShow } from 'types/tv';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -13,7 +13,7 @@ import { FilterType, IFilterMethodParams, filterMethods, searchMappings } from '
 const PAGE_SIZE = 10;
 
 export default function SearchView() {
-  const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
+  const [searchMovieData, setSearchMovieData] = useState<IMovieDetailed[]>([]);
   const [searchShowData, setSearchShowData] = useState<IShow[]>([]);
   const [searchType, setSearchType] = useState<FilterType>('tv');
   const [filterOptions, setFilterOptions] = useState<IFilterMethodParams[]>(filterMethods.tv);
