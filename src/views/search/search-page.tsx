@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { tvApi } from 'services/tvApi';
-//import { moviesApi } from 'services/moviesApi';
+import { useState } from 'react';
+// import { useSearchParams } from 'next/navigation';
+// import { tvApi } from 'services/tvApi';
+// import { moviesApi } from 'services/moviesApi';
 import { Box, Stack, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import SearchCard from 'components/SearchCard/SearchCard';
 import NoSearchResults from 'components/SearchCard/NoSearchResults';
@@ -11,41 +11,25 @@ import { IMovie } from 'types/movies';
 import { IShow } from 'types/tv';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { moviesApi } from 'services/moviesApi';
-import { FilterType, IFilterMethodParams, filterMethods } from './filterMethods';
+import { FilterType, IFilterMethodParams, filterMethods, searchMappings } from './filterMethods';
 
 export default function SearchView() {
   const [searchMovieData, setSearchMovieData] = useState<IMovie[]>([]);
   const [searchShowData, setSearchShowData] = useState<IShow[]>([]);
   const [searchType, setSearchType] = useState<FilterType>('tv');
   const [filterOptions, setFilterOptions] = useState<IFilterMethodParams[]>(filterMethods.tv);
-  const queryParams = useSearchParams();
+  //const queryParams = useSearchParams();
 
   // useEffect(() => {
-  //   tvApi
-  //     .getAll()
-  //     .then((response) => {
-  //       setSearchShowData(response);
-  //     })
-  //     .catch((error) => console.error(error));
-  //   moviesApi
-  //     .getAll()
-  //     .then((response) => {
-  //       setSearchMovieData(response.data.data);
-  //     })
-  //     .catch((error) => console.error(error));
-  // }, []);
+  //   const title = queryParams.get('title');
 
-  useEffect(() => {
-    const title = queryParams.get('title');
-
-    if (title) {
-      tvApi.search({ params: { name: title } }).then((response) => {
-        setSearchShowData(response.data.data);
-      });
-    }
-    setSearchMovieData([]);
-  }, [queryParams]);
+  //   if (title) {
+  //     tvApi.search({ params: { name: title } }).then((response) => {
+  //       setSearchShowData(response.data.data);
+  //     });
+  //   }
+  //   setSearchMovieData([]);
+  // }, [queryParams]);
 
   const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => {
     setSearchType(newCategory);
@@ -62,51 +46,26 @@ export default function SearchView() {
     validationSchema: Yup.object({
       search: Yup.string().required('Search field is required').max(128)
     }),
-    onSubmit: (values, { setErrors, setSubmitting }) => {
-      switch (values.searchBy) {
-        case 'title':
-          tvApi.search({ params: { name: values.search } }).then((response: any) => {
-            if (response?.error) {
-              setErrors({ search: response.error });
-              setSubmitting(false);
-            } else {
-              setSearchShowData(response.data.data);
-              setSubmitting(false);
-            }
-          });
-          moviesApi.search({ params: { q: values.search } }).then((response: any) => {
-            if (response?.error) {
-              setErrors({ search: response.error });
-              setSubmitting(false);
-            } else {
-              setSearchMovieData(response.data.data.data);
-              setSubmitting(false);
-            }
-          });
-          break;
-        case 'actor':
-          tvApi.search({ params: { castMember: values.search } }).then((response: any) => {
-            if (response?.error) {
-              setErrors({ search: response.error });
-              setSubmitting(false);
-            } else {
-              setSearchShowData(response.data.data);
-              setSubmitting(false);
-            }
-          });
-          moviesApi.searchByFilter({ params: { actor: values.search } }).then((response: any) => {
-            if (response?.error) {
-              setErrors({ search: response.error });
-              setSubmitting(false);
-            } else {
-              setSearchMovieData(response.data.data.data);
-              setSubmitting(false);
-            }
-          });
-          break;
-        default:
-          setErrors({ searchBy: 'Improper search-by filter' });
+    onSubmit: async (values, { setErrors, setSubmitting }) => {
+      const searchBy = values.searchBy as keyof typeof searchMappings;
+
+      if (searchMappings[searchBy]) {
+        const { tv, movie } = searchMappings[searchBy];
+
+        try {
+          const [tvResponse, movieResponse] = await Promise.all([tv(values.search), movie(values.search)]);
+
+          setSearchShowData(tvResponse.data.data);
+          setSearchMovieData(movieResponse.data.data.data);
+        } catch (error) {
+          setErrors({ search: 'Search failed.' });
+          console.error(error);
+        } finally {
           setSubmitting(false);
+        }
+      } else {
+        setErrors({ searchBy: 'Improper search-by filter' });
+        setSubmitting(false);
       }
     }
   });
@@ -121,17 +80,11 @@ export default function SearchView() {
             Search
           </button>
           <label htmlFor="searchBy">Search by:</label>
-          {/*
-          <select id="searchBy" {...searchForm.getFieldProps('searchBy')}>
-            <option value="title">Title</option>
-            <option value="actor">Actor</option>
-          </select>*/}
-
           <select id="searchBy" {...searchForm.getFieldProps('searchBy')}>
             {filterOptions
               .filter((item) => item.type === 'text')
               .map((opt) => (
-                <option key={searchType + opt.param} value={opt.param}>
+                <option key={searchType + opt.filter} value={opt.filter}>
                   {opt.label}
                 </option>
               ))}
