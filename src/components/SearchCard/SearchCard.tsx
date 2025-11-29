@@ -77,7 +77,6 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
             spacing={2}
           >
             <span>{normalizedData.genres}</span>
-            {contentType === 'movie' && <span>Rated {(contentData as IMovieDetailed).rating}</span>}
             {contentType === 'movie' ? (
               <span>{(contentData as IMovieDetailed).runtime_minutes} minutes</span>
             ) : (

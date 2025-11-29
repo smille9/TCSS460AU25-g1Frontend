@@ -18,18 +18,7 @@ export default function SearchView() {
   const [searchType, setSearchType] = useState<FilterType>('tv');
   const [filterOptions, setFilterOptions] = useState<IFilterMethodParams[]>(filterMethods.tv);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  //const queryParams = useSearchParams();
-
-  // useEffect(() => {
-  //   const title = queryParams.get('title');
-
-  //   if (title) {
-  //     tvApi.search({ params: { name: title } }).then((response) => {
-  //       setSearchShowData(response.data.data);
-  //     });
-  //   }
-  //   setSearchMovieData([]);
-  // }, [queryParams]);
+  const [movieTotalCount, setMovieTotalCount] = useState<number>(1);
 
   const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'movie' | 'tv') => {
     setSearchType(newCategory);
@@ -63,6 +52,7 @@ export default function SearchView() {
 
           setSearchShowData(tvResponse.data.data);
           setSearchMovieData(movieResponse.data.data.data);
+          setMovieTotalCount(movieResponse.data.data.pagination.totalCount);
         } catch (error) {
           setErrors({ search: 'Search failed.' });
           console.error(error);
@@ -76,6 +66,9 @@ export default function SearchView() {
     }
   });
 
+  // detect whether there is another page or not (won't always work with edge cases, but we're limited by the TV api)
+  const isLastPage = searchType === 'movie' ? Math.ceil(movieTotalCount / PAGE_SIZE) == currentPage : searchShowData.length < PAGE_SIZE;
+
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -84,8 +77,10 @@ export default function SearchView() {
   };
 
   const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
-    searchForm.submitForm(); // Re-submit the form with new page
+    if (!isLastPage) {
+      setCurrentPage(currentPage + 1);
+      searchForm.submitForm(); // Re-submit the form with new page
+    }
   };
 
   // to control whether pagination buttons are visible
@@ -141,8 +136,10 @@ export default function SearchView() {
           <Button variant="outlined" onClick={handlePreviousPage} disabled={currentPage === 1 || searchForm.isSubmitting}>
             Previous
           </Button>
-          <span>Page {currentPage}</span>
-          <Button variant="outlined" onClick={handleNextPage} disabled={searchForm.isSubmitting}>
+          <span>
+            Page {currentPage} {searchType === 'movie' && <> of {Math.ceil(movieTotalCount / PAGE_SIZE)}</>}
+          </span>
+          <Button variant="outlined" onClick={handleNextPage} disabled={isLastPage || searchForm.isSubmitting}>
             Next
           </Button>
         </Stack>
