@@ -1,5 +1,18 @@
-import { mockTVService } from 'utils/axios';
+import { tvService } from 'utils/axios';
 
 export const tvApi = {
-  getAll: () => Promise.resolve(mockTVService.get())
+  search: (config: {
+    params: {
+      name?: string;
+      genre?: string;
+      network?: string;
+      castMember?: string;
+      status?: string;
+      minrating?: number;
+      limit?: number;
+      offset?: number;
+    };
+  }) => tvService.get('/series', config),
+  getByID: (id: number) => tvService.get(`/series/${id}`),
+  create: (payload: any) => tvService.post('/series', payload)
 };

@@ -4,22 +4,22 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import ChromeOutlined from '@ant-design/icons/ChromeOutlined';
+import MovieIcon from '@mui/icons-material/Movie';
 
 // type
 import { NavItemType } from 'types/menu';
 
 // icons
-const icons = { ChromeOutlined };
+const icons = { MovieIcon };
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE ||============================== //
 
 const samplePage: NavItemType = {
-  id: 'sample-page',
-  title: <FormattedMessage id="sample-page" />,
+  id: 'movies',
+  title: <FormattedMessage id="Movie Watchlist" />,
   type: 'group',
-  url: '/sample-page',
-  icon: icons.ChromeOutlined
+  url: '/movies',
+  icon: icons.MovieIcon
 };
 
 export default samplePage;
