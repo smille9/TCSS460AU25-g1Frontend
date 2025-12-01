@@ -156,8 +156,8 @@ export default function MovieCreate() {
   };
 
   const fields = [
-    { label: 'Title', name: 'title', placeholder: 'e.g. Inception' },
-    { label: 'Original Title', name: 'original_title', placeholder: 'Optional' },
+    { label: 'Title', name: 'title', placeholder: 'e.g. Inception', type: 'text' },
+    { label: 'Original Title', name: 'original_title', placeholder: 'Optional', type: 'text' },
     { label: 'Release Year', name: 'release_year', placeholder: 'e.g. 2010', type: 'number' },
     { label: 'Runtime (minutes)', name: 'runtime_minutes', placeholder: 'e.g. 148', type: 'number' },
     { label: 'Rating (0–10)', name: 'rating', placeholder: 'e.g. 8.8', type: 'number' },
@@ -165,12 +165,13 @@ export default function MovieCreate() {
     { label: 'Budget', name: 'budget', placeholder: 'e.g. 160000000', type: 'number' },
     { label: 'Director ID', name: 'director_id', placeholder: 'e.g. 12', type: 'number' },
     { label: 'Country ID', name: 'country_id', placeholder: 'e.g. 1', type: 'number' },
-    { label: 'Overview', name: 'overview', placeholder: 'Brief description...' },
-    { label: 'Genres (comma-separated)', name: 'genres', placeholder: 'Action, Sci-Fi' },
-    { label: 'Studios (comma-separated)', name: 'studios', placeholder: 'Warner Bros.' },
-    { label: 'Poster URL', name: 'poster_url', placeholder: 'https://...' },
-    { label: 'Backdrop URL', name: 'backdrop_url', placeholder: 'https://...' },
-    { label: 'Collection', name: 'collection', placeholder: 'Optional' }
+    { label: 'Overview', name: 'overview', placeholder: 'Brief description...', type: 'text' },
+    { label: 'Genres (comma-separated)', name: 'genres', placeholder: 'Action, Sci-Fi', type: 'text' },
+    { label: 'Studios (comma-separated)', name: 'studios', placeholder: 'Warner Bros.', type: 'text' },
+    { label: 'Poster URL', name: 'poster_url', placeholder: 'https://...', type: 'text' },
+    { label: 'Backdrop URL', name: 'backdrop_url', placeholder: 'https://...', type: 'text'},
+    { label: 'Collection', name: 'collection', placeholder: 'Optional', type: 'text'
+     }
   ];
 
   return (
@@ -184,6 +185,9 @@ export default function MovieCreate() {
                 <Stack key={field.name} spacing={0.5}>
                   <InputLabel htmlFor={`field-${field.name}`}>{field.label}</InputLabel>
                   <OutlinedInput
+                    fullWidth
+                    id={`field-${field.name}`}
+                    name={field.name}
                     type={field.type || 'text'}
                     value={values[field.name as keyof MovieFormValues]}
                     onBlur={handleBlur}

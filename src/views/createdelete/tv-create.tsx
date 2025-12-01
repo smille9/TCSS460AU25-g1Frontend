@@ -7,6 +7,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 // third-party
 import * as Yup from 'yup';
@@ -142,7 +145,6 @@ export default function ShowCreate() {
       };
 
       await tvApi.create(payload);
-      console.log(payload);
 
       openSnackbar({
         open: true,
@@ -168,7 +170,11 @@ export default function ShowCreate() {
 
   return (
     <FormWrapper title="Create Show" subtitle="Fill in the details below to create a new show.">
-      <Formik<ShowFormValues> initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+      <Formik<ShowFormValues>
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
         {({ values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting }) => {
           const castTouched = touched.cast as FormikTouched<CastMember>[] | undefined;
           const castErrors = errors.cast as FormikErrors<CastMember>[] | undefined;
@@ -184,7 +190,6 @@ export default function ShowCreate() {
                   { label: 'Last Air Date', name: 'lastAirDate', type: 'date' },
                   { label: 'Seasons', name: 'seasons', placeholder: 'e.g. 5', type: 'number' },
                   { label: 'Episodes', name: 'episodes', placeholder: 'e.g. 62', type: 'number' },
-                  { label: 'Status', name: 'status', placeholder: 'Returning Series, Ended, Hiatus, Canceled', type: 'text' },
                   { label: 'Genres (comma-separated)', name: 'genres', placeholder: 'Drama, Thriller', type: 'text' },
                   { label: 'Overview', name: 'overview', placeholder: 'Brief description...', type: 'text' },
                   { label: 'Popularity', name: 'popularity', placeholder: 'e.g. 123.45', type: 'number' },
@@ -212,22 +217,43 @@ export default function ShowCreate() {
                       sx={
                         field.type === 'number'
                           ? {
-                              '& input[type=number]': {
-                                MozAppearance: 'textfield'
-                              },
-                              '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-                                WebkitAppearance: 'none',
-                                margin: 0
-                              }
+                              '& input[type=number]': { MozAppearance: 'textfield' },
+                              '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': { WebkitAppearance: 'none', margin: 0 }
                             }
                           : undefined
                       }
                     />
                     {touched[field.name as keyof ShowFormValues] && errors[field.name as keyof ShowFormValues] && (
-                      <FormHelperText error>{errors[field.name as keyof ShowFormValues] as string}</FormHelperText>
+                      <FormHelperText error>{errors[field.name as keyof ShowFormValues]?.toString()}</FormHelperText>
                     )}
                   </Stack>
                 ))}
+
+                {/* Status Dropdown */}
+                <Stack spacing={0.5}>
+                  <InputLabel htmlFor="field-status">Status</InputLabel>
+                  <FormControl fullWidth error={touched.status && Boolean(errors.status)}>
+                    <Select
+                      id="field-status"
+                      name="status"
+                      value={values.status || ''}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      displayEmpty
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Returning Series">Returning Series</MenuItem>
+                      <MenuItem value="Ended">Ended</MenuItem>
+                      <MenuItem value="Hiatus">Hiatus</MenuItem>
+                      <MenuItem value="Canceled">Canceled</MenuItem>
+                    </Select>
+                    {touched.status && errors.status && (
+                      <FormHelperText>{errors.status?.toString()}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Stack>
 
                 {/* Cast FieldArray */}
                 <FieldArray name="cast">
