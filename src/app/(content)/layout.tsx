@@ -1,5 +1,10 @@
 import ContentLayout from 'layout/ContentLayout';
+import AuthGuard from 'utils/route-guard/AuthGuard';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <ContentLayout>{children}</ContentLayout>;
+  return (
+    <AuthGuard>
+      <ContentLayout>{children}</ContentLayout>
+    </AuthGuard>
+  );
 }

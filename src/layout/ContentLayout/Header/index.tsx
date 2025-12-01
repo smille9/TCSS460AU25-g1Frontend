@@ -3,6 +3,7 @@ import { Stack } from '@mui/material';
 import Link from 'next/link';
 import styles from './Header.module.css';
 import pages from 'menu-items/mainNav';
+import Profile from 'layout/DashboardLayout/Header/HeaderContent/Profile';
 
 export default function Header() {
   //const { mode } = useConfig(); // can use for light/dark theming
@@ -18,7 +19,7 @@ export default function Header() {
       }}
     >
       <Stack>
-        <Link href="#" className={`${styles.link} ${styles.siteNameLink}`}>
+        <Link href="/" className={`${styles.link} ${styles.siteNameLink}`}>
           CouchMouse
         </Link>
       </Stack>
@@ -29,6 +30,7 @@ export default function Header() {
             {item.title}
           </Link>
         ))}
+        <Profile />
       </Stack>
     </Stack>
   );
