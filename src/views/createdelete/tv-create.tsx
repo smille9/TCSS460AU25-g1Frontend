@@ -8,7 +8,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 // third-party
@@ -86,7 +86,8 @@ export default function ShowCreate() {
     episodes: Yup.number().min(0, 'Episodes cannot be negative').required('Episodes is required'),
 
     status: Yup.string()
-      .oneOf(['Returning Series', 'Ended', 'Hiatus', 'Canceled'], 'Status must be one of: Returning Series, Ended, Hiatus, Canceled')
+      .trim()
+      .oneOf(['Returning Series', 'Ended', 'Canceled'], 'Status must be one of: Returning Series, Ended, Canceled')
       .required('Status is required'),
 
     genres: Yup.string().required('At least one genre is required'),
@@ -170,14 +171,15 @@ export default function ShowCreate() {
 
   return (
     <FormWrapper title="Create Show" subtitle="Fill in the details below to create a new show.">
-      <Formik<ShowFormValues>
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting }) => {
+      <Formik<ShowFormValues> initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+        {({ values, touched, errors, handleBlur, handleChange, handleSubmit, setFieldValue, isSubmitting }) => {
           const castTouched = touched.cast as FormikTouched<CastMember>[] | undefined;
           const castErrors = errors.cast as FormikErrors<CastMember>[] | undefined;
+
+          //Custom change handler for mui Select component since it was behaving weirdly.
+          const handleStatusChange = (event: SelectChangeEvent) => {
+            setFieldValue('status', event.target.value);
+          };
 
           return (
             <form noValidate onSubmit={handleSubmit}>
@@ -213,15 +215,6 @@ export default function ShowCreate() {
                       onChange={handleChange}
                       placeholder={field.placeholder}
                       error={touched[field.name as keyof ShowFormValues] && Boolean(errors[field.name as keyof ShowFormValues])}
-                      onWheel={field.type === 'number' ? (e) => e.currentTarget.blur() : undefined}
-                      sx={
-                        field.type === 'number'
-                          ? {
-                              '& input[type=number]': { MozAppearance: 'textfield' },
-                              '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': { WebkitAppearance: 'none', margin: 0 }
-                            }
-                          : undefined
-                      }
                     />
                     {touched[field.name as keyof ShowFormValues] && errors[field.name as keyof ShowFormValues] && (
                       <FormHelperText error>{errors[field.name as keyof ShowFormValues]?.toString()}</FormHelperText>
@@ -238,7 +231,7 @@ export default function ShowCreate() {
                       name="status"
                       value={values.status || ''}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      onChange={handleStatusChange}
                       displayEmpty
                     >
                       <MenuItem value="">
@@ -246,12 +239,10 @@ export default function ShowCreate() {
                       </MenuItem>
                       <MenuItem value="Returning Series">Returning Series</MenuItem>
                       <MenuItem value="Ended">Ended</MenuItem>
-                      <MenuItem value="Hiatus">Hiatus</MenuItem>
-                      <MenuItem value="Canceled">Canceled</MenuItem>
+                      {/*TODO:Waiting on bug report for this to be re-added. There are entries with this status in the DB but it fails to post if you try with this status*/}
+                      {/* <MenuItem value="Canceled">Canceled</MenuItem>*/}
                     </Select>
-                    {touched.status && errors.status && (
-                      <FormHelperText>{errors.status?.toString()}</FormHelperText>
-                    )}
+                    {touched.status && errors.status && <FormHelperText>{errors.status?.toString()}</FormHelperText>}
                   </FormControl>
                 </Stack>
 

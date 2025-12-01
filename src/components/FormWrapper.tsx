@@ -23,7 +23,7 @@ export default function FormWrapper({ title, subtitle, children }: FormWrapperPr
         alignItems: 'flex-start',
         overflowY: 'auto',
         py: 4,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#f5f5f5'
       }}
     >
       <Stack
@@ -36,12 +36,16 @@ export default function FormWrapper({ title, subtitle, children }: FormWrapperPr
           borderRadius: 2,
           boxShadow: 2,
           maxHeight: '90vh',
-          overflowY: 'auto',
+          overflowY: 'auto'
         }}
       >
         <Stack spacing={1}>
           <Typography variant="h3">{title}</Typography>
-          {subtitle && <Typography color="secondary" sx = {{ whiteSpace: 'pre-line'}}>{subtitle}</Typography>}
+          {subtitle && (
+            <Typography color="secondary" sx={{ whiteSpace: 'pre-line' }}>
+              {subtitle}
+            </Typography>
+          )}
         </Stack>
 
         {children}

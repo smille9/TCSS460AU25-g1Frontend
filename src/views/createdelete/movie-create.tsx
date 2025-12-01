@@ -133,7 +133,6 @@ export default function MovieCreate() {
         anchorOrigin: { vertical: 'top', horizontal: 'center' }
       } as SnackbarProps);
 
-
       resetForm();
     } catch (err: any) {
       openSnackbar({
@@ -163,12 +162,18 @@ export default function MovieCreate() {
     { label: 'Poster URL', name: 'poster_url', placeholder: 'https://...', type: 'text' },
     { label: 'Backdrop URL', name: 'backdrop_url', placeholder: 'https://...', type: 'text' },
     {
-      label: 'Collection', name: 'collection', placeholder: 'Optional', type: 'text'
+      label: 'Collection',
+      name: 'collection',
+      placeholder: 'Optional',
+      type: 'text'
     }
   ];
 
   return (
-    <FormWrapper title="Create Movie" subtitle={"Fill in the details below to create a new movie. \nPlease note that adding actors is currently unsupported."}>
+    <FormWrapper
+      title="Create Movie"
+      subtitle={'Fill in the details below to create a new movie. \nPlease note that adding actors is currently unsupported.'}
+    >
       <Formik<MovieFormValues> initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting }) => (
           <form noValidate onSubmit={handleSubmit}>
@@ -187,20 +192,6 @@ export default function MovieCreate() {
                     onChange={handleChange}
                     placeholder={field.placeholder}
                     error={touched[field.name as keyof MovieFormValues] && Boolean(errors[field.name as keyof MovieFormValues])}
-                    onWheel={field.type === 'number' ? (e) => e.currentTarget.blur() : undefined}
-                    sx={
-                      field.type === 'number'
-                        ? {
-                          '& input[type=number]': {
-                            MozAppearance: 'textfield'
-                          },
-                          '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-                            WebkitAppearance: 'none',
-                            margin: 0
-                          }
-                        }
-                        : undefined
-                    }
                   />
                   {touched[field.name as keyof MovieFormValues] && errors[field.name as keyof MovieFormValues] && (
                     <FormHelperText error>{errors[field.name as keyof MovieFormValues]?.toString()}</FormHelperText>
@@ -249,10 +240,8 @@ export default function MovieCreate() {
 
                     {values.actors.map((actor, index) => {
                       // Safe narrowed versions of touched + errors
-                      const actorTouched =
-                        touched.actors && touched.actors[index];
-                      const actorError =
-                        errors.actors && errors.actors[index];
+                      const actorTouched = touched.actors && touched.actors[index];
+                      const actorError = errors.actors && errors.actors[index];
 
                       return (
                         <Stack
@@ -260,16 +249,14 @@ export default function MovieCreate() {
                           spacing={2}
                           sx={{
                             p: 2,
-                            border: "1px solid #ddd",
+                            border: '1px solid #ddd',
                             borderRadius: 2,
-                            backgroundColor: "#fafafa",
+                            backgroundColor: '#fafafa'
                           }}
                         >
-                          {(["name", "character"] as const).map((key) => (
+                          {(['name', 'character'] as const).map((key) => (
                             <Stack key={key} spacing={0.5}>
-                              <InputLabel htmlFor={`actors-${index}-${key}`}>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}
-                              </InputLabel>
+                              <InputLabel htmlFor={`actors-${index}-${key}`}>{key.charAt(0).toUpperCase() + key.slice(1)}</InputLabel>
 
                               <OutlinedInput
                                 fullWidth
@@ -278,47 +265,26 @@ export default function MovieCreate() {
                                 value={actor[key]}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                placeholder={
-                                  key === "name"
-                                    ? "Robert Downey Jr."
-                                    : "Tony Stark"
-                                }
+                                placeholder={key === 'name' ? 'Robert Downey Jr.' : 'Tony Stark'}
                                 error={
-                                  !!(actorTouched &&
-                                    actorTouched[key] &&
-                                    actorError &&
-                                    typeof actorError !== "string" &&
-                                    actorError[key])
+                                  !!(actorTouched && actorTouched[key] && actorError && typeof actorError !== 'string' && actorError[key])
                                 }
                               />
 
-                              {actorTouched &&
-                                actorTouched[key] &&
-                                actorError &&
-                                typeof actorError !== "string" &&
-                                actorError[key] && (
-                                  <FormHelperText error>
-                                    {actorError[key]}
-                                  </FormHelperText>
-                                )}
+                              {actorTouched && actorTouched[key] && actorError && typeof actorError !== 'string' && actorError[key] && (
+                                <FormHelperText error>{actorError[key]}</FormHelperText>
+                              )}
                             </Stack>
                           ))}
 
-                          <Button
-                            color="error"
-                            onClick={() => remove(index)}
-                            disabled={values.actors.length === 1}
-                          >
+                          <Button color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
                             Remove
                           </Button>
                         </Stack>
                       );
                     })}
 
-                    <Button
-                      variant="outlined"
-                      onClick={() => push({ name: "", character: "" })}
-                    >
+                    <Button variant="outlined" onClick={() => push({ name: '', character: '' })}>
                       Add Actor
                     </Button>
                   </Stack>
