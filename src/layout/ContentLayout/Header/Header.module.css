@@ -1,0 +1,13 @@
+.link {
+  text-decoration: none;
+  color: inherit;
+  padding: 12px;
+}
+
+.link:hover {
+  color: #a9a9a9;
+}
+
+.siteNameLink {
+  font-size: 24px;
+}
