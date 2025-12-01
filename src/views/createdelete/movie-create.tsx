@@ -1,19 +1,15 @@
 'use client';
 
 // material-ui
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 // third-party
 import * as Yup from 'yup';
@@ -39,7 +35,6 @@ interface MovieFormValues {
   box_office: string | null;
   budget: string | null;
   director_id: string;
-  country_id: string;
   overview: string;
   genres: string;
   studios: string;
@@ -60,7 +55,6 @@ export default function MovieCreate() {
     box_office: '',
     budget: '',
     director_id: '',
-    country_id: '',
     overview: '',
     genres: '',
     studios: '',
@@ -83,7 +77,6 @@ export default function MovieCreate() {
     box_office: Yup.number().nullable(),
     budget: Yup.number().nullable(),
     director_id: Yup.number().min(1, 'Director ID must be > 0').required('Director is required'),
-    country_id: Yup.number().min(1, 'Country ID must be > 0').required('Country is required'),
     overview: Yup.string(),
     genres: Yup.string()
       .required('At least one genre is required')
@@ -105,7 +98,7 @@ export default function MovieCreate() {
 
   const handleSubmit = async (values: MovieFormValues, { setSubmitting, resetForm }: any) => {
     try {
-      // Convert to match api, note that API does not specify requiring actors, so the users inputted actors are omitted.
+      // Convert to match API, note that API does not allow addings actors, so the users inputted actors aren't added to the payload.
       const payload = {
         title: values.title,
         original_title: values.original_title || null,
@@ -114,7 +107,6 @@ export default function MovieCreate() {
         rating: values.rating !== '' && values.rating !== null ? Number(values.rating) : null,
         box_office: values.box_office !== '' && values.box_office !== null ? Number(values.box_office) : null,
         director_id: Number(values.director_id),
-        country_id: Number(values.country_id),
         overview: values.overview || null,
         genres: values.genres
           .split(',')
@@ -140,6 +132,7 @@ export default function MovieCreate() {
         alert: { color: 'success' },
         anchorOrigin: { vertical: 'top', horizontal: 'center' }
       } as SnackbarProps);
+      //TODO tell users that actors are omnitted. (sorry!)
 
       resetForm();
     } catch (err: any) {
@@ -164,14 +157,14 @@ export default function MovieCreate() {
     { label: 'Box Office', name: 'box_office', placeholder: 'e.g. 80255756', type: 'number' },
     { label: 'Budget', name: 'budget', placeholder: 'e.g. 160000000', type: 'number' },
     { label: 'Director ID', name: 'director_id', placeholder: 'e.g. 12', type: 'number' },
-    { label: 'Country ID', name: 'country_id', placeholder: 'e.g. 1', type: 'number' },
     { label: 'Overview', name: 'overview', placeholder: 'Brief description...', type: 'text' },
     { label: 'Genres (comma-separated)', name: 'genres', placeholder: 'Action, Sci-Fi', type: 'text' },
     { label: 'Studios (comma-separated)', name: 'studios', placeholder: 'Warner Bros.', type: 'text' },
     { label: 'Poster URL', name: 'poster_url', placeholder: 'https://...', type: 'text' },
-    { label: 'Backdrop URL', name: 'backdrop_url', placeholder: 'https://...', type: 'text'},
-    { label: 'Collection', name: 'collection', placeholder: 'Optional', type: 'text'
-     }
+    { label: 'Backdrop URL', name: 'backdrop_url', placeholder: 'https://...', type: 'text' },
+    {
+      label: 'Collection', name: 'collection', placeholder: 'Optional', type: 'text'
+    }
   ];
 
   return (
@@ -198,14 +191,14 @@ export default function MovieCreate() {
                     sx={
                       field.type === 'number'
                         ? {
-                            '& input[type=number]': {
-                              MozAppearance: 'textfield'
-                            },
-                            '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-                              WebkitAppearance: 'none',
-                              margin: 0
-                            }
+                          '& input[type=number]': {
+                            MozAppearance: 'textfield'
+                          },
+                          '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
                           }
+                        }
                         : undefined
                     }
                   />
@@ -252,34 +245,80 @@ export default function MovieCreate() {
               <FieldArray name="actors">
                 {({ push, remove }) => (
                   <Stack spacing={2}>
-                    <Typography variant="subtitle1">Actors</Typography>
-                    {values.actors.map((actor, index) => (
-                      <Stack key={index} spacing={1}>
-                        <Typography variant="subtitle2">Actor {index + 1}</Typography>
-                        <Box display="flex" gap={2} alignItems="center">
-                          <OutlinedInput
-                            fullWidth
-                            name={`actors[${index}].name`}
-                            value={actor.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder="Actor Name"
-                          />
-                          <OutlinedInput
-                            fullWidth
-                            name={`actors[${index}].character`}
-                            value={actor.character}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder="Character Name"
-                          />
-                          <IconButton color="error" onClick={() => remove(index)}>
-                            <RemoveCircleOutlineIcon />
-                          </IconButton>
-                        </Box>
-                      </Stack>
-                    ))}
-                    <Button startIcon={<AddCircleOutlineIcon />} onClick={() => push({ name: '', character: '' })}>
+                    <Typography variant="h6">Actors</Typography>
+
+                    {values.actors.map((actor, index) => {
+                      // Safe narrowed versions of touched + errors
+                      const actorTouched =
+                        touched.actors && touched.actors[index];
+                      const actorError =
+                        errors.actors && errors.actors[index];
+
+                      return (
+                        <Stack
+                          key={index}
+                          spacing={2}
+                          sx={{
+                            p: 2,
+                            border: "1px solid #ddd",
+                            borderRadius: 2,
+                            backgroundColor: "#fafafa",
+                          }}
+                        >
+                          {(["name", "character"] as const).map((key) => (
+                            <Stack key={key} spacing={0.5}>
+                              <InputLabel htmlFor={`actors-${index}-${key}`}>
+                                {key.charAt(0).toUpperCase() + key.slice(1)}
+                              </InputLabel>
+
+                              <OutlinedInput
+                                fullWidth
+                                id={`actors-${index}-${key}`}
+                                name={`actors.${index}.${key}`}
+                                value={actor[key]}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder={
+                                  key === "name"
+                                    ? "Robert Downey Jr."
+                                    : "Tony Stark"
+                                }
+                                error={
+                                  !!(actorTouched &&
+                                    actorTouched[key] &&
+                                    actorError &&
+                                    typeof actorError !== "string" &&
+                                    actorError[key])
+                                }
+                              />
+
+                              {actorTouched &&
+                                actorTouched[key] &&
+                                actorError &&
+                                typeof actorError !== "string" &&
+                                actorError[key] && (
+                                  <FormHelperText error>
+                                    {actorError[key]}
+                                  </FormHelperText>
+                                )}
+                            </Stack>
+                          ))}
+
+                          <Button
+                            color="error"
+                            onClick={() => remove(index)}
+                            disabled={values.actors.length === 1}
+                          >
+                            Remove
+                          </Button>
+                        </Stack>
+                      );
+                    })}
+
+                    <Button
+                      variant="outlined"
+                      onClick={() => push({ name: "", character: "" })}
+                    >
                       Add Actor
                     </Button>
                   </Stack>
