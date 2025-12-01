@@ -1,0 +1,9 @@
+.link {
+  text-decoration: none;
+  color: inherit;
+  padding: 12px;
+}
+
+.siteNameLink {
+  font-size: 24px;
+}
