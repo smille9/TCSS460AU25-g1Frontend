@@ -16,7 +16,7 @@ const icons = { LiveTvIcon };
 
 const samplePage: NavItemType = {
   id: 'tv',
-  title: <FormattedMessage id="Television" />,
+  title: <FormattedMessage id="Television Watchlist" />,
   type: 'group',
   url: '/shows',
   icon: icons.LiveTvIcon

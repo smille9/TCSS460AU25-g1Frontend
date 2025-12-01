@@ -5,34 +5,81 @@ import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
-
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Divider, List } from '@mui/material';
+import { Divider, List, CircularProgress } from '@mui/material';
 
 // project import
 import { tvApi } from 'services/tvApi';
 import { IShow } from 'types/tv';
 import { NoShow, TVListItem } from 'components/TVListItem';
+import useUser from 'hooks/useUser';
 
-export default function MessagesList() {
-  // maybe i can make the list a toggle for movies and tv?
+export default function TVList() {
   const [shows, setShows] = React.useState<IShow[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const user = useUser();
+  const userEmail = user && typeof user !== 'boolean' ? user.email : null;
 
   React.useEffect(() => {
-    //This would be data from our service apis (found in ../services) for now we can mock
-    tvApi
-      .search({ params: { name: 'Uzumaki' } })
-      .then((response) => {
-        setShows(response.data.data);
-        console.dir(response);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (!userEmail) {
+      setLoading(false);
+      return;
+    }
+
+    const getWatchlist = async () => {
+      try {
+        const response = await fetch('/api/watchlist/tv');
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch TV watchlist');
+        }
+
+        const showIDs = await response.json();
+
+        if (!showIDs || showIDs.length === 0) {
+          setShows([]);
+          setLoading(false);
+          return;
+        }
+
+        const showPromises = showIDs.map((id: number) => tvApi.getByID(id));
+        const responses = await Promise.all(showPromises);
+        const showsData = responses.map((response) => response.data.data);
+
+        setShows(showsData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching TV watchlist:', error);
+        setLoading(false);
+      }
+    };
+
+    getWatchlist();
+  }, [userEmail]);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch('/api/watchlist/tv', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, action: 'remove' })
+      });
+
+      if (response.ok) {
+        // Remove the show from local state
+        setShows((prevShows) => prevShows.filter((show) => show.iD !== id));
+      } else {
+        console.error('Failed to delete show from watchlist');
+      }
+    } catch (error) {
+      console.error('Error deleting show:', error);
+    }
+  };
 
   const showsAsComponents = shows.map((show, index, shows) => (
     <React.Fragment key={'show list item: ' + index}>
-      <TVListItem show={show} />
+      <TVListItem show={show} onDelete={handleDelete} />
       {index < shows.length - 1 && (
         <Divider
           sx={(theme) => ({
@@ -47,6 +94,33 @@ export default function MessagesList() {
       )}
     </React.Fragment>
   ));
+
+  if (loading) {
+    return (
+      <Container component="main" maxWidth="md">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Container component="main" maxWidth="md">
+        <Box sx={{ marginTop: 8, textAlign: 'center' }}>
+          <Typography>Please sign in to view your watchlist</Typography>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="md">
@@ -63,7 +137,7 @@ export default function MessagesList() {
           <LiveTvIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          TV Shows
+          Your TV Shows Watchlist
         </Typography>
         <Box sx={{ mt: 1 }}>
           <List>{showsAsComponents.length ? showsAsComponents : <NoShow />}</List>

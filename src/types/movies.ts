@@ -22,3 +22,12 @@ export interface IMovies {
     hasPrevious: boolean;
   };
 }
+export interface IMovieWithPoster extends IMovie {
+  posterUrl: string;
+  backdropUrl: string;
+}
+
+export interface IPoster {
+  posterUrl: string;
+  backdropUrl: string;
+}

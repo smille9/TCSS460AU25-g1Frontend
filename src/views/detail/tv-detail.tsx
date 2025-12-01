@@ -8,6 +8,7 @@ import { Box, Stack, Typography, Chip, Card, CardMedia, Rating, Avatar } from '@
 import { tvApi } from 'services/tvApi';
 import { IShow, ActorObj } from 'types/tv';
 import { NoShow } from 'components/TVListItem';
+import { WatchlistToggle } from 'components/WatchlistToggle';
 
 export default function TvDetail() {
   const [show, setShow] = React.useState<IShow | undefined>(undefined);
@@ -60,10 +61,13 @@ export default function TvDetail() {
           </Box>
 
           {/* Component 1 box, Title Genre Rating synopsis stack*/}
-          <Stack spacing={2} sx={{ padding: 4 }}>
-            <Typography variant="h4" component="h1">
-              {show.name} ({show.originalName})
-            </Typography>
+          <Stack spacing={2} sx={{ padding: 4, flex: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
+                {show.name} ({show.originalName})
+              </Typography>
+              <WatchlistToggle id={show.iD} type="tv" />
+            </Box>
 
             {/* Genres*/}
             <Stack direction="row" spacing={1}>
