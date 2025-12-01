@@ -13,5 +13,6 @@ export const tvApi = {
       offset?: number;
     };
   }) => tvService.get('/series', config),
-  getByID: (id: number) => tvService.get(`/series/${id}`)
+  getByID: (id: number) => tvService.get(`/series/${id}`),
+  create: (payload: any) => tvService.post('/series', payload)
 };
