@@ -41,7 +41,7 @@ export default function FormWrapper({ title, subtitle, children }: FormWrapperPr
       >
         <Stack spacing={1}>
           <Typography variant="h3">{title}</Typography>
-          {subtitle && <Typography color="secondary">{subtitle}</Typography>}
+          {subtitle && <Typography color="secondary" sx = {{ whiteSpace: 'pre-line'}}>{subtitle}</Typography>}
         </Stack>
 
         {children}

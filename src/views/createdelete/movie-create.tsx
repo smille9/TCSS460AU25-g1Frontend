@@ -132,7 +132,7 @@ export default function MovieCreate() {
         alert: { color: 'success' },
         anchorOrigin: { vertical: 'top', horizontal: 'center' }
       } as SnackbarProps);
-      //TODO tell users that actors are omnitted. (sorry!)
+
 
       resetForm();
     } catch (err: any) {
@@ -168,7 +168,7 @@ export default function MovieCreate() {
   ];
 
   return (
-    <FormWrapper title="Create Movie" subtitle="Fill in the details below to create a new movie.">
+    <FormWrapper title="Create Movie" subtitle={"Fill in the details below to create a new movie. \nPlease note that adding actors is currently unsupported."}>
       <Formik<MovieFormValues> initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting }) => (
           <form noValidate onSubmit={handleSubmit}>
