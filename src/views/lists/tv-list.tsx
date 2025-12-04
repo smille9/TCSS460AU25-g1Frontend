@@ -7,13 +7,13 @@ import Box from '@mui/material/Box';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Divider, List, CircularProgress } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 
 // project import
 import { tvApi } from 'services/tvApi';
 import { IShow } from 'types/tv';
-import { NoShow, TVListItem } from 'components/TVListItem';
 import useUser from 'hooks/useUser';
+import SearchCard from 'components/SearchCard/SearchCard';
 
 export default function TVList() {
   const [shows, setShows] = React.useState<IShow[]>([]);
@@ -77,24 +77,6 @@ export default function TVList() {
     }
   };
 
-  const showsAsComponents = shows.map((show, index, shows) => (
-    <React.Fragment key={'show list item: ' + index}>
-      <TVListItem show={show} onDelete={handleDelete} />
-      {index < shows.length - 1 && (
-        <Divider
-          sx={(theme) => ({
-            borderColor: 'grey.A800',
-            ...theme.applyStyles('dark', {
-              borderColor: '#555555'
-            })
-          })}
-          variant="middle"
-          component="li"
-        />
-      )}
-    </React.Fragment>
-  ));
-
   if (loading) {
     return (
       <Container component="main" maxWidth="md">
@@ -139,8 +121,27 @@ export default function TVList() {
         <Typography component="h1" variant="h5">
           Your TV Shows Watchlist
         </Typography>
-        <Box sx={{ mt: 1 }}>
-          <List>{showsAsComponents.length ? showsAsComponents : <NoShow />}</List>
+        <Box sx={{ mt: 3, width: '100%' }}>
+          {shows.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body1" color="text.secondary">
+                Your TV shows watchlist is empty
+              </Typography>
+            </Box>
+          ) : (
+            <Stack direction="column" gap={2}>
+              {shows.map((show) => (
+                <SearchCard
+                  key={show.iD}
+                  contentId={show.iD}
+                  contentType="tv"
+                  contentData={show}
+                  onDelete={handleDelete}
+                  showDelete={true}
+                />
+              ))}
+            </Stack>
+          )}
         </Box>
       </Box>
     </Container>

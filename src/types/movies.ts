@@ -23,8 +23,8 @@ export interface IMovies {
   };
 }
 export interface IMovieWithPoster extends IMovie {
-  posterUrl: string;
-  backdropUrl: string;
+  poster_url: string;
+  backdrop_url: string;
 }
 
 export interface IPoster {

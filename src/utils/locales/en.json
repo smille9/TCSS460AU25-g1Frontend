@@ -18,5 +18,10 @@
   "reviews": "Reviews",
   "watchlist": "Watchlist",
   "tv-shows": "TV Shows",
-  "movies": "Movies"
+  "movies": "Movies",
+  "browse-movies": "Browse Movies",
+  "browse-shows": "Browse Shows",
+  "search": "Advanced Search",
+  "tv-shows-watchlist": "My Shows",
+  "movies-watchlist": "My Movies"
 }
