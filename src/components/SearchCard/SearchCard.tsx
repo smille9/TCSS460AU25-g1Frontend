@@ -15,7 +15,7 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
   const normalizedData = {
     title: '',
     genres: '',
-    posterUrl: '#',
+    posterUrl: '',
     imgAltText: ''
   };
   let detailsRoute: string;
@@ -39,7 +39,7 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
     let data = contentData as IMovieDetailed;
     normalizedData.title = data.title;
     normalizedData.genres = data.genres;
-    normalizedData.posterUrl = data.posterUrl;
+    normalizedData.posterUrl = data.poster_url;
     normalizedData.imgAltText = `Poster of ${data.title}`;
   }
 
@@ -54,12 +54,13 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
       }}
     >
       <Stack direction="row" gap="8px">
-        <Box sx={{
+        <Box
+          sx={{
             width: '96px'
           }}
         >
           <Link href={detailsRoute}>
-            <img src={normalizedData.posterUrl} alt={normalizedData.imgAltText} width={96} />
+            <img src={normalizedData.posterUrl} alt={normalizedData.imgAltText} width={96} style={{ objectFit: 'cover' }} />
           </Link>
         </Box>
         <Stack>
