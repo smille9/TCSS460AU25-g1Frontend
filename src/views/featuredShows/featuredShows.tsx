@@ -6,7 +6,7 @@ import MovieShowCard from 'components/MovieShowCard/MovieShowCard';
 import { tvApi } from 'services/tvApi';
 import { IShow } from 'types/tv';
 
-const SHOW_ROUTE: string = '/shows'; // /shows/[slug]
+const SHOW_ROUTE: string = '/shows/'; // /shows/[slug]
 const MIN_RATING: number = 7.9; // minimum rating to use as filter
 const NUM_PER_PAGE: number = 20;
 
