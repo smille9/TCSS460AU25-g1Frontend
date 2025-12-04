@@ -43,9 +43,16 @@ export default function FeaturedFilmsView() {
     const total = recentFilmCardCount + RECENT_SHOW_MORE_COUNT;
     setRecentFilmCardCount(total);
     setRecentFilmsSliced(recentFilms.slice(0, total));
-  }
+  };
 
   const allRecentFilmsDisplayed = recentFilmCardCount >= recentFilms.length;
+
+  const formatCurrency = (value: number): string => {
+    return value.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
+  };
 
   return (
     <>
@@ -69,7 +76,9 @@ export default function FeaturedFilmsView() {
             />
           ))}
         </Box>
-        <Button onClick={showMoreRecentFilms} disabled={allRecentFilmsDisplayed}>Show More</Button>
+        <Button onClick={showMoreRecentFilms} disabled={allRecentFilmsDisplayed}>
+          Show More
+        </Button>
       </Stack>
       <Stack>
         <h2>Top Grossing</h2>
@@ -85,7 +94,7 @@ export default function FeaturedFilmsView() {
             <MovieShowCard
               key={entry.movie_id}
               name={entry.title}
-              subtext={`Box Office: $${entry.box_office}`}
+              subtext={`Box Office: ${formatCurrency(parseFloat(entry.box_office))}`}
               imgUrl={entry.poster_url}
               link={MOVIE_ROUTE + entry.movie_id}
             />

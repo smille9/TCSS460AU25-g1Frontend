@@ -8,7 +8,7 @@ export interface MovieShowCardProps {
   link: string;
 }
 
-export default function MovieShowCard({name, subtext, imgUrl, link}: MovieShowCardProps) {
+export default function MovieShowCard({ name, subtext, imgUrl, link }: MovieShowCardProps) {
   return (
     <div className={styles.posterContainer}>
       <div className={styles.posterArea}>
