@@ -8,11 +8,12 @@ import { IShow } from 'types/tv';
 
 const SHOW_ROUTE: string = '/shows/'; // /shows/[slug]
 const MIN_RATING: number = 7.9; // minimum rating to use as filter
-const NUM_PER_PAGE: number = 20;
+const NUM_PER_PAGE: number = 50;
 
 export default function FeaturedShowsView() {
   const [shows, setShows] = useState<IShow[]>([]);
   const [pageNum, setPageNum] = useState<number>(1);
+  const [noMoreShows, setNoMoreShows] = useState<boolean>(false);
 
   useEffect(() => {
     tvApi
@@ -32,6 +33,10 @@ export default function FeaturedShowsView() {
       .then((response) => {
         setShows((prev) => [...prev, ...response.data.data]);
         setPageNum(pageNum + 1);
+        if (response.data.data.length < NUM_PER_PAGE) {
+          // disable button when the last shows are loaded
+          setNoMoreShows(true);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -39,8 +44,6 @@ export default function FeaturedShowsView() {
   }
 
   const showMoreShows = () => getMoreShows();
-
-  const noMoreShows = false; // FIXME
 
   return (
     <>
