@@ -5,7 +5,6 @@ import { Box, Button, Stack } from '@mui/material';
 import MovieShowCard from 'components/MovieShowCard/MovieShowCard';
 import { moviesApi } from 'services/moviesApi';
 import { IMovieDetailed } from 'types/movies';
-//import { testData } from './temp';
 
 const MOVIE_ROUTE: string = '/movies/'; // /movies/[slug]
 const RECENT_SHOW_BY_DEFAULT = 10;
