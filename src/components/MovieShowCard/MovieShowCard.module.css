@@ -1,0 +1,44 @@
+.posterContainer {
+  width: 175px;
+  min-height: 188px;
+  overflow: hidden;
+  position: relative;
+}
+
+.posterTitle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.posterContainer:hover .posterTitle {
+  transform: translateY(1px);
+}
+
+.posterArea img {
+  display: block;
+  width: 100%;
+  min-width: 125px;
+  min-height: 188px;
+  height: auto;
+}
+
+.titleText {
+  font-size: 18px;
+}
+
+.subtext {
+  font-size: 14px;
+}
+
+.cardLink {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
