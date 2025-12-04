@@ -16,5 +16,7 @@ export const moviesApi = {
   }) => moviesService.get('/api/v1/movies', config),
   getByID: (config: { params: { movieId: number } }) => moviesService.get('/api/v1/movies/search/id', config),
   getPosterByID: (id: number) => moviesService.get(`/api/v1/movies/${id}/poster`),
-  create: (payload: any) => moviesService.post('/api/v1/movies', payload)
+  create: (payload: any) => moviesService.post('/api/v1/movies', payload),
+  getRecent: () => moviesService.get('/api/v1/movies/recent'),
+  getTopGrossing: (config: { params: { limit?: number; offset?: number } }) => moviesService.get('/api/v1/movies/top-grossing', config)
 };
