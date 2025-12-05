@@ -251,7 +251,7 @@ export default function MovieCreate() {
                             p: 2,
                             border: '1px solid #ddd',
                             borderRadius: 2,
-                            backgroundColor: '#fafafa'
+                            backgroundColor: '#262626'
                           }}
                         >
                           {(['name', 'character'] as const).map((key) => (
@@ -277,14 +277,14 @@ export default function MovieCreate() {
                             </Stack>
                           ))}
 
-                          <Button color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
+                          <Button variant="contained" color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
                             Remove
                           </Button>
                         </Stack>
                       );
                     })}
 
-                    <Button variant="outlined" onClick={() => push({ name: '', character: '' })}>
+                    <Button variant="contained" color="info" onClick={() => push({ name: '', character: '' })}>
                       Add Actor
                     </Button>
                   </Stack>

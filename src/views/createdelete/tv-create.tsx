@@ -253,7 +253,7 @@ export default function ShowCreate() {
                     <Stack spacing={2}>
                       <Typography variant="h6">Cast</Typography>
                       {values.cast.map((member, index) => (
-                        <Stack key={index} spacing={2} sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2, backgroundColor: '#fafafa' }}>
+                        <Stack key={index} spacing={2} sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2, backgroundColor: '#262626' }}>
                           {(['name', 'character', 'profileUrl'] as (keyof CastMember)[]).map((key) => (
                             <Stack key={key} spacing={0.5}>
                               <InputLabel htmlFor={`cast-${index}-${key}`}>{key.charAt(0).toUpperCase() + key.slice(1)}</InputLabel>
@@ -278,12 +278,12 @@ export default function ShowCreate() {
                               )}
                             </Stack>
                           ))}
-                          <Button color="error" onClick={() => remove(index)} disabled={values.cast.length === 1}>
+                          <Button variant="contained" color="error" onClick={() => remove(index)} disabled={values.cast.length === 1}>
                             Remove
                           </Button>
                         </Stack>
                       ))}
-                      <Button variant="outlined" onClick={() => push({ name: '', character: '', profileUrl: '' })}>
+                      <Button variant="contained" color="info" onClick={() => push({ name: '', character: '', profileUrl: '' })}>
                         Add Cast Member
                       </Button>
                     </Stack>
