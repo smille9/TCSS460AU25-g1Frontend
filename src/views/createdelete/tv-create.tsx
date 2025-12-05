@@ -10,7 +10,8 @@ import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
 
 // third-party
 import * as Yup from 'yup';
@@ -22,6 +23,8 @@ import { SnackbarProps } from 'types/snackbar';
 import { tvApi } from 'services/tvApi';
 import { sanitizeCommaSeparated } from 'utils/formHelpers';
 import FormWrapper from 'components/FormWrapper';
+
+const MAX_CAST_LENGTH: number = 10;
 
 // --- Types ---
 interface CastMember {
@@ -50,6 +53,7 @@ interface ShowFormValues {
   studios: string;
   cast: CastMember[];
 }
+
 
 export default function ShowCreate() {
   const initialValues: ShowFormValues = {
@@ -222,7 +226,7 @@ export default function ShowCreate() {
                     )}
                   </Stack>
                 ))}
-                
+
                 {/* Status Dropdown */}
                 <Stack spacing={0.5}>
                   <InputLabel htmlFor="field-status">Status</InputLabel>
@@ -252,40 +256,60 @@ export default function ShowCreate() {
                   {({ push, remove }) => (
                     <Stack spacing={2}>
                       <Typography variant="h6">Cast</Typography>
-                      {values.cast.map((member, index) => (
-                        <Stack key={index} spacing={2} sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2, backgroundColor: '#fafafa' }}>
-                          {(['name', 'character', 'profileUrl'] as (keyof CastMember)[]).map((key) => (
-                            <Stack key={key} spacing={0.5}>
-                              <InputLabel htmlFor={`cast-${index}-${key}`}>{key.charAt(0).toUpperCase() + key.slice(1)}</InputLabel>
-                              <OutlinedInput
-                                fullWidth
-                                id={`cast-${index}-${key}`}
-                                name={`cast.${index}.${key}`}
-                                value={member[key]}
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                placeholder={
-                                  key === 'name'
-                                    ? 'Bryan Cranston'
-                                    : key === 'character'
-                                      ? 'Walter White'
-                                      : 'https://image.tmdb.org/t/p/...jpg'
-                                }
-                                error={castTouched?.[index]?.[key] && Boolean(castErrors?.[index]?.[key])}
-                              />
-                              {castTouched?.[index]?.[key] && castErrors?.[index]?.[key] && (
-                                <FormHelperText error>{castErrors[index][key]}</FormHelperText>
+                      {values.cast.map((member, index) => {
+                        const isLast = index === values.cast.length - 1;
+                        const canAddMore = values.cast.length < MAX_CAST_LENGTH;
+
+                        return (
+                          <Stack
+                            key={index}
+                            spacing={2}
+                            sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2, backgroundColor: '#262626' }}
+                          >
+                            {(['name', 'character', 'profileUrl'] as (keyof CastMember)[]).map((key) => (
+                              <Stack key={key} spacing={0.5}>
+                                <InputLabel htmlFor={`cast-${index}-${key}`}>{key.charAt(0).toUpperCase() + key.slice(1)}</InputLabel>
+                                <OutlinedInput
+                                  fullWidth
+                                  id={`cast-${index}-${key}`}
+                                  name={`cast.${index}.${key}`}
+                                  value={member[key]}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  placeholder={
+                                    key === 'name'
+                                      ? 'Bryan Cranston'
+                                      : key === 'character'
+                                        ? 'Walter White'
+                                        : 'https://image.tmdb.org/t/p/...jpg'
+                                  }
+                                  error={castTouched?.[index]?.[key] && Boolean(castErrors?.[index]?.[key])}
+                                />
+                                {castTouched?.[index]?.[key] && castErrors?.[index]?.[key] && (
+                                  <FormHelperText error>{castErrors[index][key]}</FormHelperText>
+                                )}
+                              </Stack>
+                            ))}
+                            <Stack direction="column" alignItems="center" justifyContent="center">
+                              <IconButton color="error" onClick={() => remove(index)} disabled={values.cast.length === 1}>
+                                <DeleteIcon />
+                              </IconButton>
+
+                              {isLast && (
+                                <Button
+                                  startIcon={<AddIcon />}
+                                  variant="outlined"
+                                  size="medium"
+                                  disabled={!canAddMore}
+                                  onClick={() => push({ name: '', character: '' })}
+                                >
+                                  Add Cast Member
+                                </Button>
                               )}
                             </Stack>
-                          ))}
-                          <Button color="error" onClick={() => remove(index)} disabled={values.cast.length === 1}>
-                            Remove
-                          </Button>
-                        </Stack>
-                      ))}
-                      <Button variant="outlined" onClick={() => push({ name: '', character: '', profileUrl: '' })}>
-                        Add Cast Member
-                      </Button>
+                          </Stack>
+                        );
+                      })}
                     </Stack>
                   )}
                 </FieldArray>

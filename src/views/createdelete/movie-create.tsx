@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 // third-party
 import * as Yup from 'yup';
@@ -20,6 +22,8 @@ import { openSnackbar } from 'api/snackbar';
 import { SnackbarProps } from 'types/snackbar';
 import { moviesApi } from 'services/moviesApi';
 import FormWrapper from 'components/FormWrapper';
+
+const MAX_ACTORS_AMOUNT: number = 10;
 
 interface Actor {
   name: string;
@@ -242,6 +246,8 @@ export default function MovieCreate() {
                       // Safe narrowed versions of touched + errors
                       const actorTouched = touched.actors && touched.actors[index];
                       const actorError = errors.actors && errors.actors[index];
+                      const isLast = index === values.actors.length - 1;
+                      const canAddMore = values.actors.length < MAX_ACTORS_AMOUNT;
 
                       return (
                         <Stack
@@ -251,7 +257,7 @@ export default function MovieCreate() {
                             p: 2,
                             border: '1px solid #ddd',
                             borderRadius: 2,
-                            backgroundColor: '#fafafa'
+                            backgroundColor: '#262626'
                           }}
                         >
                           {(['name', 'character'] as const).map((key) => (
@@ -277,16 +283,26 @@ export default function MovieCreate() {
                             </Stack>
                           ))}
 
-                          <Button color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
-                            Remove
-                          </Button>
+                          <Stack direction="column" alignItems="center" justifyContent="center">
+                            <IconButton color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
+                              <DeleteIcon />
+                            </IconButton>
+
+                            {isLast && (
+                              <Button
+                                startIcon={<AddIcon />}
+                                variant="outlined"
+                                size="medium"
+                                disabled={!canAddMore}
+                                onClick={() => push({ name: '', character: '' })}
+                              >
+                                Add Actor
+                              </Button>
+                            )}
+                          </Stack>
                         </Stack>
                       );
                     })}
-
-                    <Button variant="outlined" onClick={() => push({ name: '', character: '' })}>
-                      Add Actor
-                    </Button>
                   </Stack>
                 )}
               </FieldArray>
