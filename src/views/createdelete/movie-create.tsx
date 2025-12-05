@@ -245,6 +245,7 @@ export default function MovieCreate() {
                       const actorTouched = touched.actors && touched.actors[index];
                       const actorError = errors.actors && errors.actors[index];
                       const isLast = index === values.actors.length - 1;
+                      const canAddMore = values.actors.length < 10;
 
                       return (
                         <Stack
@@ -290,7 +291,7 @@ export default function MovieCreate() {
                             </IconButton>
 
                             {isLast &&(
-                              <Button startIcon={<AddIcon/>} variant="outlined" size="medium" onClick={() => push({ name: '', character: '' })}>
+                              <Button startIcon={<AddIcon/>} variant="outlined" size="medium" disabled={!canAddMore} onClick={() => push({ name: '', character: '' })}>
                                 Add Actor
                               </Button>
                             )}
