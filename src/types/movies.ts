@@ -42,6 +42,8 @@ export interface IMovieDetailed extends IMovieWithPoster {
   collection: string;
   original_title: string;
   actors: string;
+  poster_url: string;
+  backdrop_url: string;
 }
 
 export interface IMoviesDetailed {
