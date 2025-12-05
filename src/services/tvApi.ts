@@ -8,7 +8,7 @@ export const tvApi = {
       network?: string;
       castMember?: string;
       status?: string;
-      minrating?: number;
+      minRating?: number;
       limit?: number;
       offset?: number;
     };
