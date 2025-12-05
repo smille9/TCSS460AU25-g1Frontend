@@ -445,7 +445,10 @@ export default function SearchView() {
             {searchType === 'movie' && searchMovieData.length === 0 && !filters.some((f) => f.value.trim()) && (
               <Box sx={{ textAlign: 'center', py: 4 }}>
                 <Typography variant="body1" color="text.secondary">
-                  Enter search criteria and click Search to find movies
+                  Enter search criteria and click Search to find movies.
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Note due to API limitations, searching by title with additional filters may yield limited results.
                 </Typography>
               </Box>
             )}
