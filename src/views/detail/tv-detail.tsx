@@ -54,12 +54,19 @@ export default function TvDetail() {
         <Stack sx={{ p: 1, border: 'hidden' }} spacing={4}>
           {/* 4 total components*/}
           {/* #1 has Image Title Genre Genre2 Genre3 synopsis and rating*/}
-          <Box sx={{ display: 'flex', gap: 3, backgroundColor: '#262626', border: '2px',
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 3,
+              backgroundColor: '#262626',
+              border: '2px',
               borderRadius: '24px',
               borderColor: '#595959',
-              borderStyle: 'solid' }}>
+              borderStyle: 'solid'
+            }}
+          >
             {/* Component 1 box, poster*/}
-            <Box sx = {{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '20px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '20px' }}>
               <Card sx={{ minWidth: 200 }}>
                 <CardMedia
                   component="img"
@@ -74,7 +81,7 @@ export default function TvDetail() {
 
             {/* Component 1 box, Title Genre Rating synopsis stack*/}
             <Stack spacing={2} sx={{ padding: 4, flex: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2,  }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
                   {show.name} ({show.originalName})
                 </Typography>
