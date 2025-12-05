@@ -101,9 +101,12 @@ export default function MovieDetail() {
         <Stack sx={{ p: 1, border: 'hidden' }} spacing={4}>
           {/* 4 total components*/}
           {/* #1 has Image Title Genre Genre2 Genre3 synopsis and rating*/}
-          <Box sx={{ display: 'flex', gap: 3, backgroundColor: '#262626' }}>
+          <Box sx={{ display: 'flex', gap: 3, backgroundColor: '#262626', border: '2px',
+              borderRadius: '24px',
+              borderColor: '#595959',
+              borderStyle: 'solid' }}>
             {/* Component 1 box, poster*/}
-            <Box>
+            <Box sx = {{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '20px' }}>
               <Card sx={{ minWidth: 200 }}>
                 <CardMedia
                   component="img"
@@ -168,7 +171,11 @@ export default function MovieDetail() {
           <Box
             sx={{
               backgroundColor: '#262626',
-              padding: 2
+              padding: 2,
+              border: '2px',
+              borderRadius: '24px',
+              borderColor: '#595959',
+              borderStyle: 'solid'
             }}
           >
             <Stack direction="row" spacing={7} sx={{ padding: 2 }}>
@@ -191,7 +198,11 @@ export default function MovieDetail() {
           <Box
             sx={{
               backgroundColor: '#262626',
-              padding: 2
+              padding: 2,
+              border: '2px',
+              borderRadius: '24px',
+              borderColor: '#595959',
+              borderStyle: 'solid'
             }}
           >
             <Stack direction="row" spacing={7}>
