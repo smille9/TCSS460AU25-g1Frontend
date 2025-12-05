@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton'
+import { Add as AddIcon ,Delete as DeleteIcon } from '@mui/icons-material'
 
 // third-party
 import * as Yup from 'yup';
@@ -242,6 +244,7 @@ export default function MovieCreate() {
                       // Safe narrowed versions of touched + errors
                       const actorTouched = touched.actors && touched.actors[index];
                       const actorError = errors.actors && errors.actors[index];
+                      const isLast = index === values.actors.length - 1
 
                       return (
                         <Stack
@@ -277,16 +280,25 @@ export default function MovieCreate() {
                             </Stack>
                           ))}
 
-                          <Button variant="contained" color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
-                            Remove
-                          </Button>
+                          <Stack
+                          direction = "column"
+                          alignItems="center"
+                          justifyContent="center"
+                          > 
+                            <IconButton color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
+                              <DeleteIcon/>
+                            </IconButton>
+
+                            {isLast &&(
+                              <IconButton color="error" onClick={() => push({ name: '', character: '' })}>
+                                <AddIcon/>
+                              </IconButton>
+                            )}
+                          </Stack>
+
                         </Stack>
                       );
                     })}
-
-                    <Button variant="contained" color="info" onClick={() => push({ name: '', character: '' })}>
-                      Add Actor
-                    </Button>
                   </Stack>
                 )}
               </FieldArray>
