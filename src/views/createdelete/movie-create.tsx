@@ -10,8 +10,8 @@ import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton'
-import { Add as AddIcon ,Delete as DeleteIcon } from '@mui/icons-material'
+import IconButton from '@mui/material/IconButton';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 // third-party
 import * as Yup from 'yup';
@@ -281,22 +281,23 @@ export default function MovieCreate() {
                             </Stack>
                           ))}
 
-                          <Stack
-                          direction = "column"
-                          alignItems="center"
-                          justifyContent="center"
-                          > 
+                          <Stack direction="column" alignItems="center" justifyContent="center">
                             <IconButton color="error" onClick={() => remove(index)} disabled={values.actors.length === 1}>
-                              <DeleteIcon/>
+                              <DeleteIcon />
                             </IconButton>
 
-                            {isLast &&(
-                              <Button startIcon={<AddIcon/>} variant="outlined" size="medium" disabled={!canAddMore} onClick={() => push({ name: '', character: '' })}>
+                            {isLast && (
+                              <Button
+                                startIcon={<AddIcon />}
+                                variant="outlined"
+                                size="medium"
+                                disabled={!canAddMore}
+                                onClick={() => push({ name: '', character: '' })}
+                              >
                                 Add Actor
                               </Button>
                             )}
                           </Stack>
-
                         </Stack>
                       );
                     })}
