@@ -244,7 +244,7 @@ export default function MovieCreate() {
                       // Safe narrowed versions of touched + errors
                       const actorTouched = touched.actors && touched.actors[index];
                       const actorError = errors.actors && errors.actors[index];
-                      const isLast = index === values.actors.length - 1
+                      const isLast = index === values.actors.length - 1;
 
                       return (
                         <Stack
@@ -290,9 +290,9 @@ export default function MovieCreate() {
                             </IconButton>
 
                             {isLast &&(
-                              <IconButton color="error" onClick={() => push({ name: '', character: '' })}>
-                                <AddIcon/>
-                              </IconButton>
+                              <Button startIcon={<AddIcon/>} variant="outlined" size="medium" onClick={() => push({ name: '', character: '' })}>
+                                Add Actor
+                              </Button>
                             )}
                           </Stack>
 
