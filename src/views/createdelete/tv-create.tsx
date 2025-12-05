@@ -24,6 +24,8 @@ import { tvApi } from 'services/tvApi';
 import { sanitizeCommaSeparated } from 'utils/formHelpers';
 import FormWrapper from 'components/FormWrapper';
 
+const MAX_CAST_LENGTH: number = 10;
+
 // --- Types ---
 interface CastMember {
   name: string;
@@ -51,6 +53,7 @@ interface ShowFormValues {
   studios: string;
   cast: CastMember[];
 }
+
 
 export default function ShowCreate() {
   const initialValues: ShowFormValues = {
@@ -255,7 +258,7 @@ export default function ShowCreate() {
                       <Typography variant="h6">Cast</Typography>
                       {values.cast.map((member, index) => {
                         const isLast = index === values.cast.length - 1;
-                        const canAddMore = values.cast.length < 10;
+                        const canAddMore = values.cast.length < MAX_CAST_LENGTH;
 
                         return (
                           <Stack

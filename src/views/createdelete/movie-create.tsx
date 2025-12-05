@@ -23,6 +23,8 @@ import { SnackbarProps } from 'types/snackbar';
 import { moviesApi } from 'services/moviesApi';
 import FormWrapper from 'components/FormWrapper';
 
+const MAX_ACTORS_AMOUNT: number = 10;
+
 interface Actor {
   name: string;
   character: string;
@@ -245,7 +247,7 @@ export default function MovieCreate() {
                       const actorTouched = touched.actors && touched.actors[index];
                       const actorError = errors.actors && errors.actors[index];
                       const isLast = index === values.actors.length - 1;
-                      const canAddMore = values.actors.length < 10;
+                      const canAddMore = values.actors.length < MAX_ACTORS_AMOUNT;
 
                       return (
                         <Stack
