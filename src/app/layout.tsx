@@ -4,7 +4,7 @@ import './globals.css';
 
 // PROJECT IMPORTS
 import ProviderWrapper from './ProviderWrapper';
-import { publicSans } from 'config';
+import { roboto } from 'config';
 
 export const metadata: Metadata = {
   title: 'Couchmouse',
@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={publicSans.className}>
+      <body className={roboto.className}>
         <ProviderWrapper>{children}</ProviderWrapper>
       </body>
     </html>

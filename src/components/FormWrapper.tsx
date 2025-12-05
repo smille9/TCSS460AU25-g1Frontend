@@ -23,7 +23,7 @@ export default function FormWrapper({ title, subtitle, children }: FormWrapperPr
         alignItems: 'flex-start',
         overflowY: 'auto',
         py: 4,
-        backgroundColor: '#f5f5f5'
+        backgroundColor: '#1f1f1f'
       }}
     >
       <Stack
@@ -31,7 +31,7 @@ export default function FormWrapper({ title, subtitle, children }: FormWrapperPr
         sx={{
           width: '100%',
           maxWidth: 700,
-          bgcolor: '#fff',
+          bgcolor: '#262626',
           p: 4,
           borderRadius: 2,
           boxShadow: 2,

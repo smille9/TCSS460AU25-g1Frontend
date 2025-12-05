@@ -1,5 +1,6 @@
-import { Box, Stack, Divider } from '@mui/material';
+import { Box, Stack, Divider, IconButton } from '@mui/material';
 import Link from 'next/link';
+import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './SearchCard.module.css';
 import { IShow } from 'types/tv';
 import { IMovieDetailed } from 'types/movies';
@@ -8,14 +9,16 @@ interface SearchCardProps {
   contentId: number;
   contentType: 'movie' | 'tv';
   contentData: IShow | IMovieDetailed;
+  onDelete?: (id: number) => void;
+  showDelete?: boolean;
 }
 
-export default function SearchCard({ contentId, contentType, contentData }: SearchCardProps) {
+export default function SearchCard({ contentId, contentType, contentData, onDelete, showDelete = false }: SearchCardProps) {
   // all data common to both movies and tv results
   const normalizedData = {
     title: '',
     genres: '',
-    posterUrl: '#',
+    posterUrl: '',
     imgAltText: ''
   };
   let detailsRoute: string;
@@ -39,9 +42,15 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
     let data = contentData as IMovieDetailed;
     normalizedData.title = data.title;
     normalizedData.genres = data.genres;
-    normalizedData.posterUrl = data.posterUrl;
+    normalizedData.posterUrl = data.poster_url;
     normalizedData.imgAltText = `Poster of ${data.title}`;
   }
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(contentId);
+    }
+  };
 
   return (
     <Box
@@ -50,16 +59,36 @@ export default function SearchCard({ contentId, contentType, contentData }: Sear
         backgroundColor: '#262626',
         borderRadius: '24px',
         border: '1px solid #595959',
-        padding: '16px'
+        padding: '16px',
+        position: 'relative'
       }}
     >
+      {showDelete && onDelete && (
+        <IconButton
+          onClick={handleDelete}
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            color: '#efefef',
+            '&:hover': {
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              color: '#ef4444'
+            }
+          }}
+          aria-label="Remove from watchlist"
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
       <Stack direction="row" gap="8px">
-        <Box sx={{
+        <Box
+          sx={{
             width: '96px'
           }}
         >
           <Link href={detailsRoute}>
-            <img src={normalizedData.posterUrl} alt={normalizedData.imgAltText} width={96} />
+            <img src={normalizedData.posterUrl} alt={normalizedData.imgAltText} width={96} style={{ objectFit: 'cover' }} />
           </Link>
         </Box>
         <Stack>

@@ -62,7 +62,7 @@ export default function Palette(mode: ThemeMode, presetColor: PresetColor) {
       divider: mode === ThemeMode.DARK ? alpha(paletteColor.grey[900]!, 0.05) : paletteColor.grey[200],
       background: {
         paper: mode === ThemeMode.DARK ? paletteColor.grey[100] : paletteColor.grey[0],
-        default: paletteColor.grey.A50
+        default: '#1e1e1e'
       }
     }
   });
