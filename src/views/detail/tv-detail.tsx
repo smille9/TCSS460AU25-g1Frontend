@@ -7,28 +7,34 @@ import { Box, Stack, Typography, Chip, Card, CardMedia, Rating, Avatar } from '@
 // project import
 import { tvApi } from 'services/tvApi';
 import { IShow, ActorObj } from 'types/tv';
-import { NoShow } from 'components/TVListItem';
 import { WatchlistToggle } from 'components/WatchlistToggle';
 
 export default function TvDetail() {
   const [show, setShow] = React.useState<IShow | undefined>(undefined);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   //Capture Route params
   const { id } = useParams();
   React.useEffect(() => {
     if (!id) return;
+    setIsLoading(true);
     tvApi
       .getByID(Number(id))
       .then((response) => {
         setShow(response.data.data);
         console.dir(response);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => setIsLoading(false));
   }, [id]);
 
-  //If show is undefined, show empty container
+  //Handle loading and error states
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   if (!show) {
-    return <NoShow />;
+    return <div>Show was not found with id: {id ?? 'undefined'}</div>;
   }
 
   return (

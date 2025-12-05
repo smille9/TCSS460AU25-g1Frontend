@@ -6,7 +6,7 @@ import { Box, Stack, Typography, Card, CardMedia, Rating, Chip, Avatar } from '@
 
 // project import
 import { moviesApi } from 'services/moviesApi';
-import { IMovieDetailed, IPoster } from 'types/movies';
+import { IMovieDetailed } from 'types/movies';
 import { WatchlistToggle } from 'components/WatchlistToggle';
 
 type Actor = {
@@ -16,7 +16,7 @@ type Actor = {
 
 export default function MovieDetail() {
   const [movie, setMovie] = React.useState<IMovieDetailed>(); // using detailed response (API docs not updated)
-  const [poster, setPoster] = React.useState<IPoster>();
+  const [isLoading, setIsLoading] = React.useState(true);
 
   //Helpers to parse responses
   const parseSemicolonSeparatedString = (seperatedString?: string) =>
@@ -42,33 +42,25 @@ export default function MovieDetail() {
   const { id } = useParams();
   React.useEffect(() => {
     if (!id) return;
+    setIsLoading(true);
     moviesApi
       .getByID({ params: { movieId: Number(id) } })
       .then((response) => {
         setMovie(response.data.data.data[0]);
         console.dir(response);
       })
-      .catch((error) => console.error(error));
-    moviesApi
-      .getPosterByID(Number(id))
-      .then((response) => {
-        setPoster(response.data.data);
-        console.dir(response);
-      })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => setIsLoading(false));
   }, [id]);
 
-  //If Movie is undefined
+  //Handle loading and error states
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   if (!movie) {
-    return <div>movie was not found with id: {id ?? 'undefined'}</div>;
+    return <div>Movie was not found with id: {id ?? 'undefined'}</div>;
   }
-
-  if (!poster) {
-    return <div>poster was not found with id: {id ?? 'undefined'}</div>;
-  }
-
-  console.log('Rendering MovieDetail with movie:', movie);
-  console.log('Rendering MovieDetail with poster:', poster);
 
   //Parse response actors JSON string into an array
   let movieCast: Actor[] = [];
@@ -92,7 +84,7 @@ export default function MovieDetail() {
         sx={{
           p: 3,
           maxWidth: 1400,
-          backgroundImage: `url(${poster.backdropUrl})`,
+          backgroundImage: `url(${movie.backdrop_url})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
@@ -117,7 +109,7 @@ export default function MovieDetail() {
               <Card sx={{ minWidth: 200 }}>
                 <CardMedia
                   component="img"
-                  image={poster.posterUrl}
+                  image={movie.poster_url}
                   alt={'name: ' + movie.title}
                   sx={{
                     height: 300
