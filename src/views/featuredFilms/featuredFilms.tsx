@@ -56,6 +56,27 @@ export default function FeaturedFilmsView() {
   return (
     <>
       <Stack>
+        <h2>Top Grossing</h2>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: '8px'
+          }}
+        >
+          {grossingFilms.map((entry) => (
+            <MovieShowCard
+              key={entry.movie_id}
+              name={entry.title}
+              subtext={`Box Office: ${formatCurrency(parseFloat(entry.box_office))}`}
+              imgUrl={entry.poster_url}
+              link={MOVIE_ROUTE + entry.movie_id}
+            />
+          ))}
+        </Box>
+      </Stack>
+      <Stack>
         <h2>Recently Released</h2>
         <Box
           sx={{
@@ -78,27 +99,6 @@ export default function FeaturedFilmsView() {
         <Button onClick={showMoreRecentFilms} disabled={allRecentFilmsDisplayed}>
           Show More
         </Button>
-      </Stack>
-      <Stack>
-        <h2>Top Grossing</h2>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: '8px'
-          }}
-        >
-          {grossingFilms.map((entry) => (
-            <MovieShowCard
-              key={entry.movie_id}
-              name={entry.title}
-              subtext={`Box Office: ${formatCurrency(parseFloat(entry.box_office))}`}
-              imgUrl={entry.poster_url}
-              link={MOVIE_ROUTE + entry.movie_id}
-            />
-          ))}
-        </Box>
       </Stack>
     </>
   );
