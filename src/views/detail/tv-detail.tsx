@@ -32,16 +32,15 @@ export default function TvDetail() {
   }
 
   return (
-
-    <Box sx={{
-      display: 'flex',
-      justifyContent: 'center', 
-      alignItems: 'flex-start', 
-      minHeight: '100vh',      
-      backgroundColor: '#1f1f1f',  
-    }}
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        minHeight: '100vh',
+        backgroundColor: '#1f1f1f'
+      }}
     >
-
       <Box
         sx={{
           p: 3,
@@ -164,14 +163,8 @@ export default function TvDetail() {
               </Stack>
             </Stack>
           </Box>
-
-          {/* #4 has Reviews*/}
-          <Box sx={{ backgroundColor: '#262626', padding: 2 }}>
-            Reviews are currently unimplemented. <br />
-          </Box>
         </Stack>
       </Box>
-
     </Box>
   );
 }
