@@ -85,7 +85,7 @@ export default function AuthLogin({ providers, csrfToken }: any) {
                 setErrors({ submit: res.error });
                 setSubmitting(false);
               } else {
-                preload('/search', fetcher);
+                preload('/movies', fetcher);
                 setSubmitting(false);
               }
             },
