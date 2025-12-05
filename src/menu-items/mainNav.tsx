@@ -8,22 +8,34 @@ const pages: NavItemType = {
   type: 'group',
   children: [
     {
-      id: 'watchlist',
-      title: <FormattedMessage id="watchlist" />,
+      id: 'browse-movies',
+      title: <FormattedMessage id="browse-movies" />,
       type: 'item',
-      url: '/watchlist'
+      url: '/movies'
     },
     {
-      id: 'tv-shows',
-      title: <FormattedMessage id="tv-shows" />,
+      id: 'browse-tv',
+      title: <FormattedMessage id="browse-shows" />,
       type: 'item',
       url: '/shows'
     },
     {
-      id: 'movies',
-      title: <FormattedMessage id="movies" />,
+      id: 'search',
+      title: <FormattedMessage id="search" />,
       type: 'item',
-      url: '/movies'
+      url: '/search'
+    },
+    {
+      id: 'tv-shows-watchlist',
+      title: <FormattedMessage id="tv-shows-watchlist" />,
+      type: 'item',
+      url: '/shows-watchlist'
+    },
+    {
+      id: 'movies-watchlist',
+      title: <FormattedMessage id="movies-watchlist" />,
+      type: 'item',
+      url: '/movies-watchlist'
     }
   ]
 };

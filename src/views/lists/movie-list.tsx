@@ -7,14 +7,13 @@ import Box from '@mui/material/Box';
 import MovieIcon from '@mui/icons-material/Movie';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Divider, List, CircularProgress } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 
 // project import
-import { IMovieWithPoster } from 'types/movies';
-import { MovieListItem } from 'components/MovieListItem';
-import { NoShow } from 'components/TVListItem';
+import { IMovieDetailed, IMovieWithPoster } from 'types/movies';
 import useUser from 'hooks/useUser';
 import { moviesApi } from 'services/moviesApi';
+import SearchCard from 'components/SearchCard/SearchCard';
 
 export default function MoviesList() {
   const [movies, setMovies] = React.useState<IMovieWithPoster[]>([]);
@@ -40,22 +39,12 @@ export default function MoviesList() {
           return;
         }
 
-        // Fetch both movies and posters in parallel
-        const [mResponses, pResponses] = await Promise.all([
-          Promise.all(movieIDs.map((id: number) => moviesApi.getByID({ params: { movieId: id } }))),
-          Promise.all(movieIDs.map((id: number) => moviesApi.getPosterByID(id)))
-        ]);
+        // Fetch movies (poster_url is already included in response)
+        const moviePromises = movieIDs.map((id: number) => moviesApi.getByID({ params: { movieId: id } }));
+        const responses = await Promise.all(moviePromises);
+        const moviesData = responses.map((response) => response.data.data.data[0]);
 
-        const moviesData = mResponses.map((response) => response.data.data.data[0]);
-        const postersData = pResponses.map((response) => response.data.data.posterUrl);
-
-        // Combine movies with their posters
-        const moviesWithPosters: IMovieWithPoster[] = moviesData.map((movie, index) => ({
-          ...movie,
-          posterUrl: postersData[index]
-        }));
-        console.log('Movies with posters combined:', moviesWithPosters);
-        setMovies(moviesWithPosters);
+        setMovies(moviesData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching watchlist:', error);
@@ -83,24 +72,6 @@ export default function MoviesList() {
       console.error('Error deleting movie:', error);
     }
   };
-
-  const moviesAsComponents = movies.map((movie, index, movies) => (
-    <React.Fragment key={'movie list item: ' + index}>
-      <MovieListItem movie={movie} onDelete={handleDelete} />
-      {index < movies.length - 1 && (
-        <Divider
-          sx={(theme) => ({
-            borderColor: 'grey.A800',
-            ...theme.applyStyles('dark', {
-              borderColor: '#555555'
-            })
-          })}
-          variant="middle"
-          component="li"
-        />
-      )}
-    </React.Fragment>
-  ));
 
   if (loading) {
     return (
@@ -146,8 +117,27 @@ export default function MoviesList() {
         <Typography component="h1" variant="h5">
           Your Movies Watchlist
         </Typography>
-        <Box sx={{ mt: 1 }}>
-          <List>{moviesAsComponents.length ? moviesAsComponents : <NoShow />}</List>
+        <Box sx={{ mt: 3, width: '100%' }}>
+          {movies.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body1" color="text.secondary">
+                Your movies watchlist is empty
+              </Typography>
+            </Box>
+          ) : (
+            <Stack direction="column" gap={2}>
+              {movies.map((movie) => (
+                <SearchCard
+                  key={movie.movie_id}
+                  contentId={movie.movie_id}
+                  contentType="movie"
+                  contentData={movie as IMovieDetailed}
+                  onDelete={handleDelete}
+                  showDelete={true}
+                />
+              ))}
+            </Stack>
+          )}
         </Box>
       </Box>
     </Container>
