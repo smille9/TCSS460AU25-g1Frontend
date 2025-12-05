@@ -118,7 +118,7 @@ export default function MovieDetail() {
                 <CardMedia
                   component="img"
                   image={poster.posterUrl}
-                  alt={'name: ' + movie.title}
+                  alt={'name: ' + movie.title + '. Original Name: ' + movie.original_title}
                   sx={{
                     height: 300
                   }}
@@ -130,7 +130,7 @@ export default function MovieDetail() {
             <Stack spacing={2} sx={{ padding: 4, flex: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
-                  {movie.title}
+                  {movie.title} ({movie.original_title})
                 </Typography>
                 <WatchlistToggle id={movie.movie_id} type="movies" />
               </Box>
