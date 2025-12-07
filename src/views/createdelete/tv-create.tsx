@@ -92,7 +92,7 @@ export default function ShowCreate() {
 
     status: Yup.string()
       .trim()
-      .oneOf(['Returning Series', 'Ended', 'Canceled'], 'Status must be one of: Returning Series, Ended, Canceled')
+      .oneOf(['Returning Series', 'Ended', 'Cancelled', 'Pilot'], 'Status must be one of: Returning Series, Ended, Cancelled, Pilot')
       .required('Status is required'),
 
     genres: Yup.string().required('At least one genre is required'),
@@ -244,8 +244,8 @@ export default function ShowCreate() {
                       </MenuItem>
                       <MenuItem value="Returning Series">Returning Series</MenuItem>
                       <MenuItem value="Ended">Ended</MenuItem>
-                      {/*TODO:Waiting on bug report for this to be re-added. There are entries with this status in the DB but it fails to post if you try with this status*/}
-                      {/* <MenuItem value="Canceled">Canceled</MenuItem>*/}
+                      <MenuItem value="Cancelled">Cancelled</MenuItem>
+                      <MenuItem value="Pilot">Pilot</MenuItem>
                     </Select>
                     {touched.status && errors.status && <FormHelperText>{errors.status?.toString()}</FormHelperText>}
                   </FormControl>
