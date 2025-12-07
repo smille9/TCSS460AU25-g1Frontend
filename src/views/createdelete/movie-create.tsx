@@ -231,6 +231,7 @@ export default function MovieCreate() {
                     <MenuItem value="12">12</MenuItem>
                     <MenuItem value="18">18</MenuItem>
                     <MenuItem value="M">M</MenuItem>
+                    <MenuItem value="NC-17">NC-17</MenuItem>
                   </Select>
                   {touched.mpa_rating && errors.mpa_rating && <FormHelperText>{errors.mpa_rating?.toString()}</FormHelperText>}
                 </FormControl>
