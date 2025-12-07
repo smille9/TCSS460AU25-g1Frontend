@@ -92,7 +92,7 @@ export default function ShowCreate() {
 
     status: Yup.string()
       .trim()
-      .oneOf(['Returning Series', 'Ended', 'Cancelled', 'Pilot'], 'Status must be one of: Returning Series, Ended, Cancelled')
+      .oneOf(['Returning Series', 'Ended', 'Cancelled', 'Pilot'], 'Status must be one of: Returning Series, Ended, Cancelled, Pilot')
       .required('Status is required'),
 
     genres: Yup.string().required('At least one genre is required'),
