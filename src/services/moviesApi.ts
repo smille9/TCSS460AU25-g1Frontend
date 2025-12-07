@@ -1,7 +1,7 @@
 import { moviesService } from 'utils/axios';
 
 export const moviesApi = {
-  search: (config: { params: { q: string } }) => moviesService.get('/api/v1/movies/search', config),
+  search: (config: { params: { q: string; limit?: number; offset?: number } }) => moviesService.get('/api/v1/movies/search', config),
   searchByFilter: (config: {
     params: {
       mpaRating?: string;
