@@ -63,7 +63,7 @@ const TV_FILTERS: FilterDefinition[] = [
   { key: 'genre', label: 'Genre', type: 'text', apiParam: 'genre' },
   { key: 'network', label: 'Network', type: 'text', apiParam: 'network' },
   { key: 'castMember', label: 'Cast Member', type: 'text', apiParam: 'castMember' },
-  { key: 'minrating', label: 'Min Rating', type: 'number', apiParam: 'minrating' },
+  { key: 'minRating', label: 'Min Rating', type: 'number', apiParam: 'minRating' },
   {
     key: 'status',
     label: 'Status',
@@ -177,7 +177,7 @@ export default function SearchView() {
 
         if (hasTextSearch && !hasOtherFilters) {
           // Only text search - use search endpoint
-          response = await moviesApi.search({ params: { q: params.q } });
+          response = await moviesApi.search({ params: { q: params.q, limit: params.limit, offset: params.offset } });
         } else if (!hasTextSearch && hasOtherFilters) {
           // Only filters - use filter endpoint
           const filterParams = { ...params };
@@ -275,7 +275,7 @@ export default function SearchView() {
 
   // Trigger search when page changes
   useEffect(() => {
-    if (currentPage > 1) {
+    if (currentPage >= 1 && hasSearched) {
       performSearch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -375,7 +375,17 @@ export default function SearchView() {
                         onChange={(e) => updateFilter(filter.id, 'value', e.target.value)}
                         placeholder={`Enter ${filterDef?.label.toLowerCase()}`}
                         size="medium"
-                        inputProps={filterDef?.type === 'number' ? { min: 0, step: filterDef.key.includes('rating') ? 0.1 : 1 } : {}}
+                        slotProps={{
+                          input:
+                            filterDef?.type === 'number'
+                              ? {
+                                  inputProps: {
+                                    min: 0,
+                                    step: filterDef.key.includes('minRating') ? 0.1 : 1
+                                  }
+                                }
+                              : {}
+                        }}
                       />
                     )}
 
