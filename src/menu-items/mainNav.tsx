@@ -36,6 +36,37 @@ const pages: NavItemType = {
       title: <FormattedMessage id="movies-watchlist" />,
       type: 'item',
       url: '/movies-watchlist'
+    },
+    {
+      id: 'group-admin',
+      title: <FormattedMessage id="group-admin" />,
+      type: 'group',
+      children: [
+        {
+          id: 'add-movie',
+          title: <FormattedMessage id="add-movie" />,
+          type: 'item',
+          url: '/movies/create'
+        },
+        {
+          id: 'add-show',
+          title: <FormattedMessage id="add-show" />,
+          type: 'item',
+          url: '/shows/create'
+        },
+        {
+          id: 'delete-movie',
+          title: <FormattedMessage id="delete-movie" />,
+          type: 'item',
+          url: '/movies/delete'
+        },
+        {
+          id: 'delete-show',
+          title: <FormattedMessage id="delete-show" />,
+          type: 'item',
+          url: '/shows/delete'
+        }
+      ]
     }
   ]
 };

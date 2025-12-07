@@ -23,5 +23,10 @@
   "browse-shows": "Browse Shows",
   "search": "Advanced Search",
   "tv-shows-watchlist": "My Shows",
-  "movies-watchlist": "My Movies"
+  "movies-watchlist": "My Movies",
+  "group-admin": "Admin",
+  "add-movie": "Create Movie",
+  "add-show": "Create Show",
+  "delete-movie": "Delete Movie",
+  "delete-show": "Delete Show"
 }
