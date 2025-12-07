@@ -391,41 +391,6 @@ export default function MovieCreate() {
                     {touched.mpa_rating && errors.mpa_rating && <FormHelperText>{errors.mpa_rating?.toString()}</FormHelperText>}
                   </FormControl>
                 </Stack>
-              ))}
-
-              {/* MPA Rating Dropdown */}
-              <Stack spacing={0.5}>
-                <InputLabel htmlFor="field-mpa_rating">MPA Rating</InputLabel>
-                <FormControl fullWidth error={touched.mpa_rating && Boolean(errors.mpa_rating)}>
-                  <Select
-                    id="field-mpa_rating"
-                    name="mpa_rating"
-                    value={values.mpa_rating || ''}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    displayEmpty
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-
-                    <MenuItem value="PG">PG</MenuItem>
-                    <MenuItem value="G">G</MenuItem>
-                    <MenuItem value="PG-13">PG-13</MenuItem>
-                    <MenuItem value="15+">15+</MenuItem>
-                    <MenuItem value="16">16</MenuItem>
-                    <MenuItem value="R">R</MenuItem>
-                    <MenuItem value="14">14</MenuItem>
-                    <MenuItem value="NR">NR</MenuItem>
-                    <MenuItem value="6">6</MenuItem>
-                    <MenuItem value="12">12</MenuItem>
-                    <MenuItem value="18">18</MenuItem>
-                    <MenuItem value="M">M</MenuItem>
-                    <MenuItem value="NC-17">NC-17</MenuItem>
-                  </Select>
-                  {touched.mpa_rating && errors.mpa_rating && <FormHelperText>{errors.mpa_rating?.toString()}</FormHelperText>}
-                </FormControl>
-              </Stack>
 
                 {/* Actors FieldArray */}
                 <FieldArray name="actors">
