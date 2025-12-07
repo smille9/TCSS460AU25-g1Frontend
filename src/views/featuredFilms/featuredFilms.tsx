@@ -56,7 +56,7 @@ export default function FeaturedFilmsView() {
   return (
     <>
       <Stack>
-        <h2>Top Grossing</h2>
+        <h2>Top Grossing Movies</h2>
         <Box
           sx={{
             display: 'flex',
@@ -77,7 +77,7 @@ export default function FeaturedFilmsView() {
         </Box>
       </Stack>
       <Stack>
-        <h2>Recently Released</h2>
+        <h2>Recently Released Movies</h2>
         <Box
           sx={{
             display: 'flex',
