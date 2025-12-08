@@ -1,4 +1,4 @@
-# TCSS460 Group 1 Front End project
+# CouchMouse - TCSS460 Group 1 Front End project
 
 > **University of Washington Tacoma**
 >
@@ -13,9 +13,27 @@
 
 ---
 ## Contents
+* [About](#couchmouse-simple-film-and-television-discovery-for-the-lazy)
 * [Alpha Sprint 1](#alpha-sprint-1-week-6---november-3---november-9)
 * [Beta Sprint 1](#beta-sprint-1-week-7---november-10---november-16)
 * [Beta Sprint 2](#beta-sprint-2-week-8-9-november-17---november-30)
+* [Production Sprint](#production-sprint-week-10-december-1---december-7)
+
+---
+# CouchMouse: Simple Film and Television Discovery for the Lazy
+
+Explore top films and TV shows by browsing through featured collections or using our simple but powerful search tool.
+
+**Features**:
+* Browse for featured films with lists of top grossing and recent releases
+* Browse for featured TV shows based on rating
+* Simple but powerful searching of TV shows and Movies based on a series of combinable search filters - Title, Genre, Director, Actor, Rating, Year, Parantal rating, and network
+* Keep track of the content you love - save your favorite movies and TV shows to your very own watchlist! 
+* Admins - Create and delete movies and TV shows for database maintenance (deletion not yet available)
+
+*Get started today at: https://couchmouse.vercel.app*
+
+**Developers**: Mathew Belmont, Preston Sia, Sean Miller
 
 ---
 
@@ -132,3 +150,40 @@ All of our work, as of posting this, is in a series of PRs awaiting review. The 
 The API key that group key keeps giving us is really a JWT token set to expire in 2 weeks.
 
 Preston spent more time than anticipated on the search page, hasn't implemented some of the other page design elements yet.
+
+---
+
+# Production Sprint (Week 10, December 1 - December 7)
+
+https://couchmouse.vercel.app
+
+This week - make final modifications and re-do the theming to make everything consistent.
+
+## Contributions
+* Mathew: Re-worked the search page after a group decision to modify the user experience.
+* Preston: Re-worked the movies and shows listing page, bug fixes, advise group on styling.
+* Sean: Adjusted the theming of the movies/shows details pages and the create/delete pages.
+* Abdul: No contribution.
+
+## Meetings
+
+2025-12-01 (~1.5 hour synchronous online)
+
+Merged in pull requests from the last sprint, deployed them to the "production" branch. We discused hot to clean up our site and make everything consistent, mainly basing the theme on the search page that Preston wrote. We also decided to reflow the search page to revamp the user experience.
+
+2025-12-04 (~1 hour synchronous online)
+
+We previewed the changes to the new "advanced" search tool with better, more complete search options (thanks Claude). We also looked at the new movies/shows listing page. Routing changes were discussed to make the naming of our routes more consistent. We also discussed the beginning stages of cutting out the template material and switching everything to our new layout, some of which we took care of during the meeting.
+
+2025-12-05 (~2 hours synchronous online)
+
+After making new pull requests for the features discussed at the last meeting asynchronously, we discussed making further minor adjustments to make the styling consistent. For the details page, we spent a while trying to get our poster fill up the whole left side of its container, but couldn't get it to work. We instead padded it to display in the middle. Afterwords we merged in those pull requests and discussed the need to test the experience of our site by trying to break it, and some remaining minor details with the create/delete pages.
+
+Asynchronous weekend tasks - For the rest of the week we will be working on ironing out any remaining bugs and preparing our final submission.
+
+## Sprint Comments and Concerns
+* We have continued to run into issues with the other groups' APIs, mainly the movie API (group 2). We've submitted multiple bug reports, and luckily they worked to fix them. Most had to do with the formatting of their poster URL data, lacking critical features (such as getting a single movie by ID), and other inconsistencies. Their documentation continues to be inconsistent and their routes for filters, well, a bit nonsensical.
+* The Movies API team (group 2) did not have a route to allow us to search for specific directors until late Friday night, prompting a last minute change Sunday afternoon to add a quick feature allowing a user to add a director by name
+* The "API key" that the movies group (group 3) is not actually an API key, but a JWT token that they are using as an API key. It's set to expire sometime this week, so that will need to be resolved. Upon further questioning, it seems that group 3 (Devin) thinks that they have done something clever by using some "default" username and password and requiring us to use those credentials to generate new JWT tokens to use as API keys every 14 days using *their* auth API which we aren't even using (we're using group 4's auth API). I don't think they understand the essence of an API key, much less are the motivated to fix it.
+* Due to the strange way that the movies group implemented their filters, our search options for movies don't always work properly (it may not return anything).
+* We became aware of a major vulnerability through Vercel when it refused to deploy our code. We simply ran ```npm update``` and redeployed to fix this.

@@ -138,7 +138,7 @@ export default function MovieDetail() {
               <Typography>
                 {/* Outer span is to ensure the whole Title:Value stays on one line, inner is to bold the Titles. */}
                 <span style={{ whiteSpace: 'nowrap' }}>
-                  <span style={{ fontWeight: 700 }}>Rating:</span> {movie.rating ? `$${movie.rating}/10` : 'Unrated'}
+                  <span style={{ fontWeight: 700 }}>Rating:</span> {movie.rating ? `${movie.rating}/10` : 'Unrated'}
                 </span>{' '}
                 <span style={{ whiteSpace: 'nowrap' }}>
                   <span style={{ fontWeight: 700 }}>Box Office Revenue:</span> {convertStringToMonetaryAmount(movie.box_office)}
